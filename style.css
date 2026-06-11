@@ -65,20 +65,56 @@ a{color:var(--gold);text-decoration:none;}
    Deep space behind, ribbon of starlight between six star systems.
    ============================================================ */
 
-/* 48x48 floating trigger, fixed top-right, shows current page ornament */
+/* 68x68 floating trigger, fixed top-right: ringed star system */
 #garden-trigger{
   position:fixed;
   top:24px;right:24px;
-  width:48px;height:48px;
-  padding:7px;
+  width:68px;height:68px;
+  padding:10px;
   background:rgba(15,15,13,.85);
   border:1px solid var(--hairline);
   cursor:pointer;
   z-index:90;
+  overflow:visible;
   transition:border-color 160ms ease,background 160ms ease;
 }
 #garden-trigger:hover{border-color:var(--gold);background:var(--card);}
 #garden-trigger svg{width:100%;height:100%;display:block;overflow:visible;}
+
+/* halo layer: orbital ring + supernova pulses, larger than the button */
+.gm-trig-halo{
+  position:absolute;
+  top:50%;left:50%;
+  width:144px;height:144px;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.gm-ring{
+  stroke:var(--gold);stroke-width:1;fill:none;
+  opacity:.5;
+  transition:opacity .2s ease;
+}
+#garden-trigger:hover .gm-ring{opacity:1;}
+/* base spin: 8s per revolution. hover adds a second rotation so the
+   combined rate is one revolution per 1.5s, with no angle jump. */
+.gm-ring-spin,.gm-ring-spin2{transform-box:view-box;transform-origin:50% 50%;}
+.gm-ring-spin{animation:gmRingSpin 8s linear infinite;}
+.gm-ring-spin2{animation:gmRingSpin 1.846s linear infinite;animation-play-state:paused;}
+#garden-trigger:hover .gm-ring-spin2{animation-play-state:running;}
+@keyframes gmRingSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.gm-pulse-layer circle{
+  fill:none;stroke:var(--gold);stroke-width:1;
+  opacity:0;
+  transform-box:fill-box;transform-origin:center;
+}
+@keyframes gmTrigPulse{
+  0%{transform:scale(.486);opacity:.6;}  /* r 34 of 70 */
+  100%{transform:scale(1);opacity:0;}    /* r 70 */
+}
+
+.gm-trig-orn{display:block;width:100%;height:100%;transition:transform 200ms ease;}
+#garden-trigger:hover .gm-trig-orn{transform:scale(1.15);}
 
 /* full-screen overlay */
 .gm-overlay{
@@ -216,6 +252,8 @@ a{color:var(--gold);text-decoration:none;}
   .gm-thread{opacity:.9;}
   .gm-label,.gm-overlay.open .gm-label{opacity:.75;transform:none;transition:none;}
   .gm-ornwrap,.gm-node:hover .gm-ornwrap{transition:none;transform:none;}
+  .gm-ring-spin,.gm-ring-spin2{animation:none;}
+  .gm-trig-orn,#garden-trigger:hover .gm-trig-orn{transition:none;transform:none;}
   #garden-close:hover{transform:none;}
   .ornament .dr,.o-inflow .dr{stroke-dashoffset:0 !important;transition:none !important;}
 }
