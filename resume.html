@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R&eacute;sum&eacute; &mdash; Edima Essien</title>
+<meta name="description" content="Edima Essien. Data analyst. Org builder. CS meets business.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  .page-label{font-size:10px;font-weight:500;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin:0 0 18px;}
+  .sec-title{font-size:10px;font-weight:500;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin:0 0 28px;}
+  /* the spine for this page IS the timeline: visible track + draw */
+  #ghost-spine{opacity:.15;}
+  #live-spine{stroke-width:1;}
+
+  main{padding-left:22vw;padding-right:8vw;}
+  header.page-head{padding-top:18vh;padding-bottom:7vh;max-width:680px;}
+  .page-head h1{font-size:clamp(38px,6vw,56px);font-weight:400;letter-spacing:-1px;margin:0 0 14px;}
+  .page-head .sub{font-size:16px;color:var(--dim);margin:0 0 32px;}
+  .dl{
+    display:inline-block;border:1px solid var(--gold);color:var(--gold);
+    background:transparent;padding:13px 28px;
+    font-size:11px;font-weight:500;letter-spacing:3px;
+    transition:background 160ms ease,color 160ms ease;
+  }
+  .dl:hover{background:var(--gold);color:var(--bg);}
+
+  .res-sec{max-width:680px;padding:5vh 0;}
+  .role{margin-bottom:34px;}
+  .role:last-child{margin-bottom:0;}
+  .role h2{font-size:20px;font-weight:500;margin:0 0 4px;}
+  .role .det{font-size:14px;color:var(--dim);margin:0;}
+  .skill-line{margin-bottom:16px;font-size:14px;color:var(--dim);}
+  .skill-line:last-child{margin-bottom:0;}
+  .skill-line .k{
+    display:block;font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);text-transform:uppercase;margin-bottom:5px;
+  }
+  /* timeline dot markers: hard-cornered diamonds, fill when passed */
+  #dot-layer{position:absolute;top:0;left:0;width:100%;height:0;z-index:1;pointer-events:none;}
+  .tl-dot{
+    position:absolute;width:9px;height:9px;
+    border:1px solid var(--gold);background:var(--bg);
+    transform:translate(-50%,-50%) rotate(45deg);
+    transition:background .4s ease;
+  }
+  .tl-dot.passed{background:var(--gold);}
+
+  html.js .rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease-out,transform .7s ease-out;}
+  html.js .in .rv{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){
+    html.js .rv{opacity:1;transform:none;transition:none;}
+  }
+  @media (max-width:767px){
+    main{padding-left:20vw;padding-right:6vw;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .tl-dot{transition:none;}
+  }
+</style>
+</head>
+<body>
+<svg id="spine" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:0;overflow:visible" aria-hidden="true">
+  <path id="ghost-spine" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.06" d=""/>
+  <path id="live-spine" fill="none" stroke="#C9A84C" stroke-width="1.5" d=""/>
+</svg>
+<div id="dot-layer" aria-hidden="true"></div>
+
+<main id="page-content" style="position:relative;z-index:1">
+
+  <header class="page-head" data-reveal>
+    <p class="page-label rv">R&Eacute;SUM&Eacute;</p>
+    <h1 class="rv">Edima Essien</h1>
+    <p class="sub rv">Data analyst. Org builder. CS meets business.</p>
+    <!-- placeholder: point at the real PDF when exported -->
+    <a class="dl rv" href="resume.pdf">DOWNLOAD PDF &#8594;</a>
+  </header>
+
+  <section class="res-sec" data-reveal>
+    <p class="sec-title rv">Experience</p>
+    <div class="role rv" data-dot>
+      <h2>Data &amp; Reporting Analyst</h2>
+      <p class="det">Office of the AVP External, University of Windsor &middot; Co-op, 2026</p>
+    </div>
+    <div class="role rv" data-dot>
+      <h2>Strategy Lead &amp; Founder</h2>
+      <p class="det">BSCS, Black Students in Computer Science &middot; Dec 2025&ndash;present</p>
+    </div>
+    <div class="role rv" data-dot>
+      <h2>VP Special Projects</h2>
+      <p class="det">Net Impact Odette &middot; 2026/2027</p>
+    </div>
+    <div class="role rv" data-dot>
+      <h2>Coach</h2>
+      <p class="det">LaSalle Stompers FC</p>
+    </div>
+  </section>
+
+  <section class="res-sec" data-reveal>
+    <p class="sec-title rv">Education</p>
+    <div class="role rv" data-dot>
+      <h2>BComm Honours + Computer Science Co-op</h2>
+      <p class="det">University of Windsor &middot; 2024&ndash;2028<br>Odette School of Business + School of Computer Science</p>
+    </div>
+  </section>
+
+  <section class="res-sec" data-reveal>
+    <p class="sec-title rv">Skills</p>
+    <p class="skill-line rv"><span class="k">Data</span>Salesforce, Raiser's Edge, Agility PR, Constant Contact, Power Query, Excel</p>
+    <p class="skill-line rv"><span class="k">Technical</span>Python, Oracle SQLplus, HTML/CSS/JS, WeasyPrint, pptxgenjs</p>
+    <p class="skill-line rv"><span class="k">Tools</span>Microsoft Office Suite, draw.io</p>
+  </section>
+
+</main>
+<footer style="position:relative;z-index:1;text-align:center;padding:12vh 6vw 60px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Edima Essien &middot; Windsor, Ontario &middot; Built by hand &middot; No rounded corners</footer>
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- the timeline spine ----------
+     nearly vertical, runs through the sidebar; dot markers at each role */
+  var spine = document.getElementById('spine');
+  var ghost = document.getElementById('ghost-spine');
+  var live  = document.getElementById('live-spine');
+  var dotLayer = document.getElementById('dot-layer');
+  var total = 0, dots = [];
+
+  function progress(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max <= 0) return 1;
+    return Math.min(1, Math.max(0, window.scrollY / max));
+  }
+  function buildSpine(){
+    spine.setAttribute('height', 0);
+    var h = document.documentElement.scrollHeight;
+    var w = window.innerWidth;
+    var tx = w < 768 ? w * 0.10 : w * 0.14;
+    var amp = 5; /* a timeline holds its line; the sway is a whisper */
+    var segs = Math.max(3, Math.round(h / 800));
+    var d = 'M ' + tx + ' 0';
+    var prevX = tx;
+    for (var i = 1; i <= segs; i++){
+      var x = (i === segs) ? tx : tx + amp * (i % 2 === 1 ? 1 : -1);
+      var y2 = h * i / segs;
+      var ym = h * (i - 0.5) / segs;
+      d += ' C ' + prevX + ' ' + ym + ', ' + x + ' ' + ym + ', ' + x + ' ' + y2;
+      prevX = x;
+    }
+    ghost.setAttribute('d', d);
+    live.setAttribute('d', d);
+    spine.setAttribute('height', h);
+    total = live.getTotalLength();
+    live.style.strokeDasharray = total;
+    live.style.strokeDashoffset = reduced ? 0 : total * (1 - progress());
+    placeDots(tx);
+    updateDots();
+  }
+  function placeDots(tx){
+    dotLayer.innerHTML = '';
+    dots = [];
+    Array.prototype.forEach.call(document.querySelectorAll('[data-dot]'), function(el){
+      var r = el.getBoundingClientRect();
+      var y = r.top + window.scrollY + 14;
+      var dot = document.createElement('div');
+      dot.className = 'tl-dot';
+      dot.style.left = tx + 'px';
+      dot.style.top = y + 'px';
+      dotLayer.appendChild(dot);
+      dots.push({ y: y, el: dot });
+    });
+  }
+  function updateDots(){
+    var tipLen = reduced ? total : total * progress();
+    var tipY;
+    try { tipY = live.getPointAtLength(tipLen).y; } catch(e){ tipY = 0; }
+    dots.forEach(function(d){ d.el.classList.toggle('passed', tipY >= d.y - 4); });
+  }
+  window.addEventListener('scroll', function(){
+    if (!total) return;
+    if (!reduced) live.style.strokeDashoffset = total * (1 - progress());
+    updateDots();
+  }, { passive: true });
+  var rt = null;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(buildSpine, 160); });
+  window.addEventListener('load', buildSpine);
+  if (document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ setTimeout(buildSpine, 50); }); }
+
+  /* ---------- scroll entrance ---------- */
+  var revealTargets = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  revealTargets.forEach(function(t){
+    Array.prototype.forEach.call(t.querySelectorAll('.rv'), function(el, i){
+      el.style.transitionDelay = (i * 90) + 'ms';
+    });
+  });
+  if (reduced || !('IntersectionObserver' in window)){
+    revealTargets.forEach(function(t){ t.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    revealTargets.forEach(function(t){ io.observe(t); });
+  }
+
+  buildSpine();
+})();
+</script>
+
+<!-- ============================================================
+     GARDEN MAP NAVIGATION — shared component
+     Paste this block just before </body> on every page.
+     Requires style.css to be linked in <head>.
+     ============================================================ -->
+<button id="garden-trigger" aria-label="Open the garden map" aria-haspopup="dialog"></button>
+
+<div id="garden-overlay" class="gm-overlay" role="dialog" aria-modal="true" aria-label="Garden map navigation">
+  <p class="gm-title">The Garden Map</p>
+  <button id="garden-close" aria-label="Close the garden map">&times;</button>
+  <svg id="garden-map" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<script>
+/* ---------- page transitions (global, per spec) ---------- */
+function navigateTo(url){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced){ window.location.href = url; return; }
+  document.body.style.transition = 'opacity 400ms ease';
+  document.body.style.opacity = 0;
+  setTimeout(function(){ window.location.href = url; }, 400);
+}
+
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- fade in on load ---------- */
+  if (!reduced){
+    document.body.style.opacity = '0';
+    requestAnimationFrame(function(){
+      document.body.style.transition = 'opacity 400ms ease';
+      requestAnimationFrame(function(){ document.body.style.opacity = '1'; });
+    });
+  }
+
+  /* ---------- the six destinations ----------
+     each page carries one ornament symbol from the Kent system.
+     swing values reuse the spine logic: the map path meanders
+     between nodes exactly like the site spine. */
+  var PAGES = [
+    { key:'home',       label:'HOME',       url:'index.html',      swing: 0    },
+    { key:'portfolio',  label:'PORTFOLIO',  url:'portfolio.html',  swing:-1    },
+    { key:'resume',     label:'R\u00C9SUM\u00C9', url:'resume.html', swing: 1   },
+    { key:'dashboard',  label:'DASHBOARD',  url:'dashboard.html',  swing:-0.7  },
+    { key:'university', label:'UNIVERSITY', url:'university.html', swing: 0.7  },
+    { key:'calendar',   label:'CALENDAR',   url:'calendar.html',   swing: 0    }
+  ];
+
+  /* ---------- ornament geometry (uniform 500ms hover reveal) ----------
+     every stroked element: class="dr" pathLength="100".
+     builders return { span, inner } — span is the square viewBox extent. */
+  function E(tag, a){
+    var s = '<' + tag + ' class="dr" pathLength="100"';
+    for (var k in a) s += ' ' + k + '="' + a[k] + '"';
+    return s + '/>';
+  }
+
+  /* HOME: Palladian fan arch */
+  function ornHome(){
+    var s = E('path',{d:'M -36 18 A 36 36 0 0 1 36 18 L -36 18 Z'});
+    for (var i = 0; i <= 8; i++){
+      var a = i * 22.5 * Math.PI / 180;
+      s += E('path',{d:'M 0 18 L ' + (36*Math.cos(a)).toFixed(2) + ' ' + (18 - 36*Math.sin(a)).toFixed(2)});
+    }
+    var curl = 'M 0 -20 C 1.5 -25, 5 -28.5, 8 -27 C 10.5 -25.8, 10 -22.5, 7.5 -22.6 C 5.8 -22.7, 5.6 -24.6, 7 -25.4';
+    [11.25,56.25,101.25,146.25].forEach(function(t){
+      s += E('path',{d:curl, transform:'translate(0,18) rotate(' + (90 - t).toFixed(2) + ')'});
+    });
+    return { span:88, inner:s };
+  }
+
+  /* PORTFOLIO: eight-pointed star with botanical points */
+  function ornPortfolio(){
+    var s = E('rect',{x:-26,y:-26,width:52,height:52});
+    s += E('rect',{x:-26,y:-26,width:52,height:52,transform:'rotate(45)'});
+    for (var i = 0; i < 8; i++){
+      s += '<g transform="rotate(' + (i*45) + ')">'
+         + E('circle',{cx:0,cy:-40,r:2})
+         + E('path',{d:'M 0 -43 C 1.5 -45.5, 1 -48, -0.8 -49.5'})
+         + '</g>';
+    }
+    return { span:104, inner:s };
+  }
+
+  /* RESUME: botanical medallion */
+  function ornResume(){
+    var s = E('circle',{r:34});
+    s += E('path',{d:'M -19 -19 L 19 19'}) + E('path',{d:'M -19 19 L 19 -19'});
+    [0,90,180,270].forEach(function(r){
+      s += '<g transform="rotate(' + r + ')">'
+         + E('path',{d:'M -5 -33.6 C -4.5 -40, -2.5 -44.5, 0 -48'})
+         + E('path',{d:'M 5 -33.6 C 4.5 -40, 2.5 -44.5, 0 -48'})
+         + '</g>';
+    });
+    return { span:104, inner:s };
+  }
+
+  /* DASHBOARD: gauge — Palladian arch as instrument */
+  function ornDashboard(){
+    var s = E('path',{d:'M -28 14 L 28 14'});
+    s += E('path',{d:'M -28 14 A 28 28 0 0 1 28 14'});
+    [0,45,90,135,180].forEach(function(a){
+      s += E('path',{d:'M 0 -28 L 0 -23', transform:'translate(0,14) rotate(' + (a - 90) + ')'});
+    });
+    s += E('path',{d:'M 0 0 L 0 -24', transform:'translate(0,14) rotate(-50)'});
+    s += E('circle',{cx:0,cy:14,r:2.5});
+    return { span:72, inner:s };
+  }
+
+  /* UNIVERSITY: Palladian doorway */
+  function ornUniversity(){
+    var s = E('rect',{x:-23,y:-10,width:4,height:40});
+    s += E('rect',{x:19,y:-10,width:4,height:40});
+    s += E('path',{d:'M -27 -10 L 27 -10'});
+    s += E('path',{d:'M -21 -10 A 21 21 0 0 1 21 -10'});
+    s += E('path',{d:'M -4 -33 L 4 -33 L 2.4 -25.5 L -2.4 -25.5 Z'});
+    return { span:70, inner:s };
+  }
+
+  /* CALENDAR: sundial */
+  function ornCalendar(){
+    var s = E('circle',{r:32});
+    for (var i = 0; i < 12; i++){
+      s += E('path',{d:'M 0 -32 L 0 ' + (i % 3 === 0 ? -24 : -28), transform:'rotate(' + (i*30) + ')'});
+    }
+    s += E('path',{d:'M 0 0 L 0 -32', transform:'rotate(300)'});
+    return { span:70, inner:s };
+  }
+
+  var ORN = {
+    home: ornHome, portfolio: ornPortfolio, resume: ornResume,
+    dashboard: ornDashboard, university: ornUniversity, calendar: ornCalendar
+  };
+
+  /* ---------- detect current page ---------- */
+  var file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  var current = 'home';
+  PAGES.forEach(function(p){ if (p.url === file) current = p.key; });
+
+  /* ---------- trigger: current page's ornament, fully drawn ---------- */
+  var trigger = document.getElementById('garden-trigger');
+  (function(){
+    var o = ORN[current]();
+    var h = o.span / 2;
+    trigger.innerHTML =
+      '<svg viewBox="' + (-h) + ' ' + (-h) + ' ' + o.span + ' ' + o.span + '" xmlns="http://www.w3.org/2000/svg">' +
+      '<g fill="none" stroke="#C9A84C" stroke-width="2">' + o.inner + '</g></svg>';
+  })();
+
+  /* ---------- the map: spine logic between six nodes ---------- */
+  var map = document.getElementById('garden-map');
+  var CX = 300, AMP = 150, Y0 = 90, STEP = 124, NODE = 64;
+
+  var nodesXY = PAGES.map(function(p, i){
+    return { x: CX + AMP * p.swing, y: Y0 + i * STEP };
+  });
+
+  var d = 'M ' + nodesXY[0].x + ' ' + nodesXY[0].y;
+  for (var i = 1; i < nodesXY.length; i++){
+    var a = nodesXY[i-1], b = nodesXY[i];
+    var ym = (a.y + b.y) / 2;
+    d += ' C ' + a.x + ' ' + ym + ', ' + b.x + ' ' + ym + ', ' + b.x + ' ' + b.y;
+  }
+
+  var svgStr = '<path class="gm-ghost" d="' + d + '"/>' +
+               '<path class="gm-live" id="gm-live" d="' + d + '"/>';
+
+  PAGES.forEach(function(p, i){
+    var o = ORN[p.key]();
+    var k = (NODE / o.span).toFixed(4);
+    var pos = nodesXY[i];
+    svgStr +=
+      '<g class="gm-node' + (p.key === current ? ' current' : '') + '"' +
+      ' transform="translate(' + pos.x + ',' + pos.y + ')"' +
+      ' role="link" tabindex="0" aria-label="' + p.label + '"' +
+      ' data-url="' + p.url + '"' +
+      ' onclick="navigateTo(\'' + p.url + '\')">' +
+      '<circle r="34" fill="rgba(15,15,13,0.01)" stroke="none"/>' + /* hit area */
+      '<g fill="none" stroke="#C9A84C" stroke-width="1" transform="scale(' + k + ')">' + o.inner + '</g>' +
+      '<circle class="gm-base" r="4.5"/>' +
+      '<text class="gm-label" y="56">' + p.label + '</text>' +
+      '</g>';
+  });
+  map.innerHTML = svgStr;
+
+  /* live path draws when the map opens */
+  var gmLive = document.getElementById('gm-live');
+  var len = 2000;
+  try { len = gmLive.getTotalLength(); } catch(e){}
+  gmLive.style.strokeDasharray = len;
+  gmLive.style.strokeDashoffset = reduced ? 0 : len;
+
+  /* ---------- open / close ---------- */
+  var overlay = document.getElementById('garden-overlay');
+  var closeBtn = document.getElementById('garden-close');
+
+  function openMap(){
+    overlay.classList.add('open');
+    if (!reduced){
+      requestAnimationFrame(function(){ gmLive.style.strokeDashoffset = 0; });
+    }
+    closeBtn.focus();
+  }
+  function closeMap(){
+    overlay.classList.remove('open');
+    if (!reduced) gmLive.style.strokeDashoffset = len;
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', openMap);
+  closeBtn.addEventListener('click', closeMap);
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closeMap();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeMap();
+    if ((e.key === 'Enter' || e.key === ' ') &&
+        document.activeElement && document.activeElement.classList &&
+        document.activeElement.classList.contains('gm-node')){
+      e.preventDefault();
+      navigateTo(document.activeElement.getAttribute('data-url'));
+    }
+  });
+})();
+</script>
+<!-- ============================================================
+     END GARDEN MAP NAVIGATION
+     ============================================================ -->
+
+</body>
+</html>

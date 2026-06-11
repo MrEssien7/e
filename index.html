@@ -7,6 +7,7 @@
 <meta name="description" content="Edima Essien. Data & Reporting Analyst, founder of BSCS, BComm Honours + Computer Science Co-op at the University of Windsor.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -136,6 +137,41 @@
     margin:48px 0 0;
   }
 
+  /* ================= STATS ================= */
+  #stats{min-height:60vh;padding-top:6vh;padding-bottom:6vh;}
+  .stats-wrap{
+    position:relative;
+    width:min(760px,100%);
+    display:flex;
+    gap:clamp(48px,12vw,160px);
+  }
+  #stats-connectors{
+    position:absolute;top:0;left:0;
+    pointer-events:none;overflow:visible;z-index:0;
+  }
+  #stats-connectors path{
+    stroke:var(--gold);stroke-width:1;fill:none;opacity:.35;
+    stroke-dasharray:100;stroke-dashoffset:100;
+  }
+  #stats-connectors.active path{
+    stroke-dashoffset:0;
+    transition:stroke-dashoffset .9s ease-out .35s;
+  }
+  .scol{display:flex;flex-direction:column;gap:72px;flex:1;position:relative;z-index:1;}
+  .scol-2{margin-top:96px;} /* column 2 offset down by half a row */
+  .stat .numline{white-space:nowrap;}
+  .stat .num,.stat .suf{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:64px;line-height:1;color:var(--gold);
+  }
+  .stat .suf{opacity:0;transition:opacity .3s ease;}
+  .stat.done .suf{opacity:1;} /* + appears only after the count completes */
+  .slabel{
+    margin:10px 0 0;font-size:10px;font-weight:500;
+    letter-spacing:3px;color:var(--dim);text-transform:uppercase;
+  }
+  #ornament-stats{width:48px;height:48px;}
+
   /* ================= WORK ================= */
   #work .inner{width:min(720px,100%);}
   .grid{
@@ -243,6 +279,10 @@
     #ornament-hero{margin:0 0 28px;}
     .tagline{margin-left:0;}
     .grid{grid-template-columns:1fr;}
+    .stat .num,.stat .suf{font-size:44px;}
+    .scol{gap:48px;}
+    .scol-2{margin-top:64px;}
+    .stats-wrap{gap:28px;}
     #contact{align-items:flex-start;text-align:left;}
   }
   @media (max-width:520px){
@@ -258,6 +298,8 @@
       transition:none !important;
     }
     html.js .rv{opacity:1;transform:none;transition:none;}
+    #stats-connectors path{stroke-dashoffset:0 !important;transition:none !important;}
+    .stat .suf{transition:none;}
     .card:hover::after{animation:none;clip-path:none;}
   }
 </style>
@@ -271,6 +313,7 @@
 
 <div id="ornament-layer" aria-hidden="true">
   <div class="ornament" id="ornament-about"></div>
+  <div class="ornament" id="ornament-stats"></div>
   <div class="ornament" id="ornament-work"></div>
   <div class="ornament" id="ornament-now"></div>
   <div class="ornament" id="ornament-contact"></div>
@@ -293,6 +336,41 @@
       <p class="rv">I'm also a builder. I founded BSCS at the University of Windsor, wrote its 41-page organizational blueprint, and still run it. The point is building things that outlast the person who started them.</p>
       <p class="rv">The CS and business combination is by design, not accident. The goal is to make data useful and organizations worth being part of.</p>
       <hr class="rule rv">
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats" data-align="center">
+    <div class="stats-wrap">
+      <svg id="stats-connectors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="scol scol-1">
+        <div class="stat rv" id="s-followers" data-target="5786">
+          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+          <p class="slabel">LinkedIn Followers</p>
+        </div>
+        <div class="stat rv" id="s-members" data-target="50">
+          <p class="numline"><span class="num">0</span><span class="suf">+</span></p>
+          <p class="slabel">BSCS Members</p>
+        </div>
+        <div class="stat rv" id="s-nexgen" data-target="9">
+          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+          <p class="slabel">NEX-GEN Posts Published</p>
+        </div>
+      </div>
+      <div class="scol scol-2">
+        <div class="stat rv" id="s-views" data-target="1000">
+          <p class="numline"><span class="num">0</span><span class="suf">+</span></p>
+          <p class="slabel">Weekly Post Views</p>
+        </div>
+        <div class="stat rv" id="s-crm" data-target="4">
+          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+          <p class="slabel">CRM Systems Mapped</p>
+        </div>
+        <div class="stat rv" id="s-blueprint" data-target="41">
+          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+          <p class="slabel">Page Organizational Blueprint</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -335,7 +413,7 @@
       </div>
       <div class="now-item rv">
         <p class="nlabel">Reading</p>
-        <p class="ntext">The Bible in one year</p>
+        <p class="ntext">[Add current read]</p>
       </div>
       <div class="now-item rv">
         <p class="nlabel">Thinking</p>
@@ -347,7 +425,7 @@
   <!-- CONTACT -->
   <section id="contact" data-align="center">
     <h2 class="rv">LET'S WORK TOGETHER.</h2>
-    <a class="email rv" href="mailto:">essienedima74@gmail.com</a>
+    <a class="email rv" href="mailto:">edima.essien@[domain]</a>
   </section>
 
 </main>
@@ -473,10 +551,24 @@
     return wrap('-35 -35 70 70', s);
   }
 
+  /* STATS: surveyor's cross. two perpendicular 40px lines,
+     tick marks at each end. draws on scroll entry. */
+  function surveyorCross(){
+    var s = '';
+    s += '<path ' + attrs(0,500) + ' d="M -20 0 L 20 0"/>';
+    s += '<path ' + attrs(120,500) + ' d="M 0 -20 L 0 20"/>';
+    var ticks = ['M 20 -5 L 20 5','M -20 -5 L -20 5','M -5 -20 L 5 -20','M -5 20 L 5 20'];
+    ticks.forEach(function(t,i){
+      s += '<path ' + attrs(450 + i*100, 300) + ' d="' + t + '"/>';
+    });
+    return wrap('-24 -24 48 48', s);
+  }
+
   var heroOrn = document.getElementById('ornament-hero');
   heroOrn.innerHTML = heroFan();
   var spineOrnaments = {
     about:   { el: document.getElementById('ornament-about'),   build: aboutMedallion },
+    stats:   { el: document.getElementById('ornament-stats'),   build: surveyorCross },
     work:    { el: document.getElementById('ornament-work'),    build: workStar },
     now:     { el: document.getElementById('ornament-now'),     build: nowSundial },
     contact: { el: document.getElementById('ornament-contact'), build: contactDoorway }
@@ -486,7 +578,7 @@
   });
 
   /* ---------- ORNAMENT ACTIVATION (spine thresholds) ---------- */
-  var ornamentThresholds = { about: 0.16, work: 0.36, now: 0.62, contact: 0.84 };
+  var ornamentThresholds = { about: 0.16, stats: 0.26, work: 0.36, now: 0.62, contact: 0.84 };
   var activated = new Set();
   function updateOrnaments(progress){
     Object.entries(ornamentThresholds).forEach(function(entry){
@@ -529,6 +621,7 @@
     total = live.getTotalLength();
     live.style.strokeDasharray = total;
     placeOrnaments();
+    drawConnectors();
     if (reduced){
       live.style.strokeDashoffset = 0;
       Object.keys(spineOrnaments).forEach(function(key){
@@ -556,7 +649,7 @@
   });
 
   /* ---------- GLOBAL SCROLL ENTRANCE ---------- */
-  var observed = ['about','work','now','contact'].map(function(id){
+  var observed = ['about','stats','work','now','contact'].map(function(id){
     return document.getElementById(id);
   });
   observed.forEach(function(sec){
@@ -566,11 +659,13 @@
   });
   if (reduced){
     observed.forEach(function(sec){ sec.classList.add('in'); });
+    statsEnter();
   } else if ('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if (entry.isIntersecting){
           entry.target.classList.add('in');
+          if (entry.target.id === 'stats') statsEnter();
           io.unobserve(entry.target);
         }
       });
@@ -578,6 +673,65 @@
     observed.forEach(function(sec){ io.observe(sec); });
   } else {
     observed.forEach(function(sec){ sec.classList.add('in'); });
+    statsEnter();
+  }
+
+  /* ---------- STATS: connectors + count-up ---------- */
+  /* thin gold connector lines between related pairs:
+     followers <-> weekly views, BSCS members <-> blueprint pages */
+  function drawConnectors(){
+    var svg = document.getElementById('stats-connectors');
+    var wrapEl = document.querySelector('.stats-wrap');
+    if (!svg || !wrapEl) return;
+    var c = wrapEl.getBoundingClientRect();
+    svg.setAttribute('width', c.width);
+    svg.setAttribute('height', c.height);
+    svg.setAttribute('viewBox', '0 0 ' + c.width + ' ' + c.height);
+    var pairs = [['s-followers','s-views'], ['s-members','s-blueprint']];
+    var out = '';
+    pairs.forEach(function(pair){
+      var a = document.getElementById(pair[0]).querySelector('.num').getBoundingClientRect();
+      var b = document.getElementById(pair[1]).querySelector('.num').getBoundingClientRect();
+      var sx = a.right - c.left + 14, sy = a.top + a.height/2 - c.top;
+      var ex = b.left - c.left - 14,  ey = b.top + b.height/2 - c.top;
+      var mx = (sx + ex) / 2;
+      out += '<path pathLength="100" d="M ' + sx.toFixed(1) + ' ' + sy.toFixed(1) +
+             ' C ' + mx.toFixed(1) + ' ' + sy.toFixed(1) + ', ' +
+             mx.toFixed(1) + ' ' + ey.toFixed(1) + ', ' +
+             ex.toFixed(1) + ' ' + ey.toFixed(1) + '"/>';
+    });
+    svg.innerHTML = out;
+  }
+
+  var statsDone = false;
+  function setFinal(el){
+    var t = parseInt(el.dataset.target, 10);
+    el.querySelector('.num').textContent = t.toLocaleString('en-US');
+    el.classList.add('done');
+  }
+  function animateCount(el){
+    var t = parseInt(el.dataset.target, 10);
+    var num = el.querySelector('.num');
+    var start = null;
+    function step(ts){
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / 1400);
+      var e = 1 - Math.pow(1 - p, 3); /* ease-out */
+      num.textContent = Math.round(t * e).toLocaleString('en-US');
+      if (p < 1){ requestAnimationFrame(step); }
+      else { el.classList.add('done'); } /* + appears only now */
+    }
+    requestAnimationFrame(step);
+  }
+  function statsEnter(){
+    if (statsDone) return;
+    statsDone = true;
+    activated.add('stats');
+    spineOrnaments.stats.el.classList.add('active');
+    var conn = document.getElementById('stats-connectors');
+    if (conn) conn.classList.add('active');
+    var els = document.querySelectorAll('#stats .stat');
+    Array.prototype.forEach.call(els, reduced ? setFinal : animateCount);
   }
 
   /* ---------- INIT ---------- */
@@ -598,5 +752,234 @@
   if (document.readyState !== 'loading') init();
 })();
 </script>
+<!-- ============================================================
+     GARDEN MAP NAVIGATION — shared component
+     Paste this block just before </body> on every page.
+     Requires style.css to be linked in <head>.
+     ============================================================ -->
+<button id="garden-trigger" aria-label="Open the garden map" aria-haspopup="dialog"></button>
+
+<div id="garden-overlay" class="gm-overlay" role="dialog" aria-modal="true" aria-label="Garden map navigation">
+  <p class="gm-title">The Garden Map</p>
+  <button id="garden-close" aria-label="Close the garden map">&times;</button>
+  <svg id="garden-map" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<script>
+/* ---------- page transitions (global, per spec) ---------- */
+function navigateTo(url){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced){ window.location.href = url; return; }
+  document.body.style.transition = 'opacity 400ms ease';
+  document.body.style.opacity = 0;
+  setTimeout(function(){ window.location.href = url; }, 400);
+}
+
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- fade in on load ---------- */
+  if (!reduced){
+    document.body.style.opacity = '0';
+    requestAnimationFrame(function(){
+      document.body.style.transition = 'opacity 400ms ease';
+      requestAnimationFrame(function(){ document.body.style.opacity = '1'; });
+    });
+  }
+
+  /* ---------- the six destinations ----------
+     each page carries one ornament symbol from the Kent system.
+     swing values reuse the spine logic: the map path meanders
+     between nodes exactly like the site spine. */
+  var PAGES = [
+    { key:'home',       label:'HOME',       url:'index.html',      swing: 0    },
+    { key:'portfolio',  label:'PORTFOLIO',  url:'portfolio.html',  swing:-1    },
+    { key:'resume',     label:'R\u00C9SUM\u00C9', url:'resume.html', swing: 1   },
+    { key:'dashboard',  label:'DASHBOARD',  url:'dashboard.html',  swing:-0.7  },
+    { key:'university', label:'UNIVERSITY', url:'university.html', swing: 0.7  },
+    { key:'calendar',   label:'CALENDAR',   url:'calendar.html',   swing: 0    }
+  ];
+
+  /* ---------- ornament geometry (uniform 500ms hover reveal) ----------
+     every stroked element: class="dr" pathLength="100".
+     builders return { span, inner } — span is the square viewBox extent. */
+  function E(tag, a){
+    var s = '<' + tag + ' class="dr" pathLength="100"';
+    for (var k in a) s += ' ' + k + '="' + a[k] + '"';
+    return s + '/>';
+  }
+
+  /* HOME: Palladian fan arch */
+  function ornHome(){
+    var s = E('path',{d:'M -36 18 A 36 36 0 0 1 36 18 L -36 18 Z'});
+    for (var i = 0; i <= 8; i++){
+      var a = i * 22.5 * Math.PI / 180;
+      s += E('path',{d:'M 0 18 L ' + (36*Math.cos(a)).toFixed(2) + ' ' + (18 - 36*Math.sin(a)).toFixed(2)});
+    }
+    var curl = 'M 0 -20 C 1.5 -25, 5 -28.5, 8 -27 C 10.5 -25.8, 10 -22.5, 7.5 -22.6 C 5.8 -22.7, 5.6 -24.6, 7 -25.4';
+    [11.25,56.25,101.25,146.25].forEach(function(t){
+      s += E('path',{d:curl, transform:'translate(0,18) rotate(' + (90 - t).toFixed(2) + ')'});
+    });
+    return { span:88, inner:s };
+  }
+
+  /* PORTFOLIO: eight-pointed star with botanical points */
+  function ornPortfolio(){
+    var s = E('rect',{x:-26,y:-26,width:52,height:52});
+    s += E('rect',{x:-26,y:-26,width:52,height:52,transform:'rotate(45)'});
+    for (var i = 0; i < 8; i++){
+      s += '<g transform="rotate(' + (i*45) + ')">'
+         + E('circle',{cx:0,cy:-40,r:2})
+         + E('path',{d:'M 0 -43 C 1.5 -45.5, 1 -48, -0.8 -49.5'})
+         + '</g>';
+    }
+    return { span:104, inner:s };
+  }
+
+  /* RESUME: botanical medallion */
+  function ornResume(){
+    var s = E('circle',{r:34});
+    s += E('path',{d:'M -19 -19 L 19 19'}) + E('path',{d:'M -19 19 L 19 -19'});
+    [0,90,180,270].forEach(function(r){
+      s += '<g transform="rotate(' + r + ')">'
+         + E('path',{d:'M -5 -33.6 C -4.5 -40, -2.5 -44.5, 0 -48'})
+         + E('path',{d:'M 5 -33.6 C 4.5 -40, 2.5 -44.5, 0 -48'})
+         + '</g>';
+    });
+    return { span:104, inner:s };
+  }
+
+  /* DASHBOARD: gauge — Palladian arch as instrument */
+  function ornDashboard(){
+    var s = E('path',{d:'M -28 14 L 28 14'});
+    s += E('path',{d:'M -28 14 A 28 28 0 0 1 28 14'});
+    [0,45,90,135,180].forEach(function(a){
+      s += E('path',{d:'M 0 -28 L 0 -23', transform:'translate(0,14) rotate(' + (a - 90) + ')'});
+    });
+    s += E('path',{d:'M 0 0 L 0 -24', transform:'translate(0,14) rotate(-50)'});
+    s += E('circle',{cx:0,cy:14,r:2.5});
+    return { span:72, inner:s };
+  }
+
+  /* UNIVERSITY: Palladian doorway */
+  function ornUniversity(){
+    var s = E('rect',{x:-23,y:-10,width:4,height:40});
+    s += E('rect',{x:19,y:-10,width:4,height:40});
+    s += E('path',{d:'M -27 -10 L 27 -10'});
+    s += E('path',{d:'M -21 -10 A 21 21 0 0 1 21 -10'});
+    s += E('path',{d:'M -4 -33 L 4 -33 L 2.4 -25.5 L -2.4 -25.5 Z'});
+    return { span:70, inner:s };
+  }
+
+  /* CALENDAR: sundial */
+  function ornCalendar(){
+    var s = E('circle',{r:32});
+    for (var i = 0; i < 12; i++){
+      s += E('path',{d:'M 0 -32 L 0 ' + (i % 3 === 0 ? -24 : -28), transform:'rotate(' + (i*30) + ')'});
+    }
+    s += E('path',{d:'M 0 0 L 0 -32', transform:'rotate(300)'});
+    return { span:70, inner:s };
+  }
+
+  var ORN = {
+    home: ornHome, portfolio: ornPortfolio, resume: ornResume,
+    dashboard: ornDashboard, university: ornUniversity, calendar: ornCalendar
+  };
+
+  /* ---------- detect current page ---------- */
+  var file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  var current = 'home';
+  PAGES.forEach(function(p){ if (p.url === file) current = p.key; });
+
+  /* ---------- trigger: current page's ornament, fully drawn ---------- */
+  var trigger = document.getElementById('garden-trigger');
+  (function(){
+    var o = ORN[current]();
+    var h = o.span / 2;
+    trigger.innerHTML =
+      '<svg viewBox="' + (-h) + ' ' + (-h) + ' ' + o.span + ' ' + o.span + '" xmlns="http://www.w3.org/2000/svg">' +
+      '<g fill="none" stroke="#C9A84C" stroke-width="2">' + o.inner + '</g></svg>';
+  })();
+
+  /* ---------- the map: spine logic between six nodes ---------- */
+  var map = document.getElementById('garden-map');
+  var CX = 300, AMP = 150, Y0 = 90, STEP = 124, NODE = 64;
+
+  var nodesXY = PAGES.map(function(p, i){
+    return { x: CX + AMP * p.swing, y: Y0 + i * STEP };
+  });
+
+  var d = 'M ' + nodesXY[0].x + ' ' + nodesXY[0].y;
+  for (var i = 1; i < nodesXY.length; i++){
+    var a = nodesXY[i-1], b = nodesXY[i];
+    var ym = (a.y + b.y) / 2;
+    d += ' C ' + a.x + ' ' + ym + ', ' + b.x + ' ' + ym + ', ' + b.x + ' ' + b.y;
+  }
+
+  var svgStr = '<path class="gm-ghost" d="' + d + '"/>' +
+               '<path class="gm-live" id="gm-live" d="' + d + '"/>';
+
+  PAGES.forEach(function(p, i){
+    var o = ORN[p.key]();
+    var k = (NODE / o.span).toFixed(4);
+    var pos = nodesXY[i];
+    svgStr +=
+      '<g class="gm-node' + (p.key === current ? ' current' : '') + '"' +
+      ' transform="translate(' + pos.x + ',' + pos.y + ')"' +
+      ' role="link" tabindex="0" aria-label="' + p.label + '"' +
+      ' data-url="' + p.url + '"' +
+      ' onclick="navigateTo(\'' + p.url + '\')">' +
+      '<circle r="34" fill="rgba(15,15,13,0.01)" stroke="none"/>' + /* hit area */
+      '<g fill="none" stroke="#C9A84C" stroke-width="1" transform="scale(' + k + ')">' + o.inner + '</g>' +
+      '<circle class="gm-base" r="4.5"/>' +
+      '<text class="gm-label" y="56">' + p.label + '</text>' +
+      '</g>';
+  });
+  map.innerHTML = svgStr;
+
+  /* live path draws when the map opens */
+  var gmLive = document.getElementById('gm-live');
+  var len = 2000;
+  try { len = gmLive.getTotalLength(); } catch(e){}
+  gmLive.style.strokeDasharray = len;
+  gmLive.style.strokeDashoffset = reduced ? 0 : len;
+
+  /* ---------- open / close ---------- */
+  var overlay = document.getElementById('garden-overlay');
+  var closeBtn = document.getElementById('garden-close');
+
+  function openMap(){
+    overlay.classList.add('open');
+    if (!reduced){
+      requestAnimationFrame(function(){ gmLive.style.strokeDashoffset = 0; });
+    }
+    closeBtn.focus();
+  }
+  function closeMap(){
+    overlay.classList.remove('open');
+    if (!reduced) gmLive.style.strokeDashoffset = len;
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', openMap);
+  closeBtn.addEventListener('click', closeMap);
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closeMap();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeMap();
+    if ((e.key === 'Enter' || e.key === ' ') &&
+        document.activeElement && document.activeElement.classList &&
+        document.activeElement.classList.contains('gm-node')){
+      e.preventDefault();
+      navigateTo(document.activeElement.getAttribute('data-url'));
+    }
+  });
+})();
+</script>
+<!-- ============================================================
+     END GARDEN MAP NAVIGATION
+     ============================================================ -->
+
 </body>
 </html>

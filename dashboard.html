@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard &mdash; Edima Essien</title>
+<meta name="description" content="Professional overview. Edima Essien.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  .page-label{font-size:10px;font-weight:500;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin:0 0 18px;}
+  .sec-title{font-size:10px;font-weight:500;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin:0 0 28px;}
+  main{padding:0 8vw 0 14vw;}
+  header.page-head{padding-top:18vh;padding-bottom:7vh;}
+  .page-head h1{font-size:clamp(30px,4.5vw,40px);font-weight:400;letter-spacing:-.5px;margin:0;}
+
+  .dgrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    max-width:980px;
+  }
+  .dpanel{
+    background:var(--card);
+    border:1px solid rgba(201,168,76,.15);
+    padding:30px;
+    transition:border-color .25s ease;
+  }
+  .dpanel:hover{border-color:rgba(201,168,76,.4);}
+  .dpanel .ptitle{
+    font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);text-transform:uppercase;margin:0 0 22px;
+  }
+  .kv{font-size:14px;margin:0 0 10px;}
+  .kv .k{color:var(--dim);font-size:10px;letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:3px;}
+
+  /* progress bar */
+  .pbar{height:6px;background:rgba(201,168,76,.15);margin:26px 0 10px;}
+  .pbar .fill{height:100%;background:var(--gold);width:0;transition:width 1.2s ease-out .3s;}
+  .pbar-label{font-size:10px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin:0;}
+
+  /* status list */
+  .slist{list-style:none;margin:0;padding:0;}
+  .slist li{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid rgba(201,168,76,.1);font-size:14px;}
+  .slist li:last-child{border-bottom:none;}
+  .sdot{width:8px;height:8px;flex:0 0 auto;transform:rotate(45deg);}
+  .sdot.filled{background:var(--gold);}
+  .sdot.outline{border:1px solid var(--gold);background:transparent;}
+  .scheck{color:rgba(201,168,76,.55);font-size:13px;flex:0 0 auto;width:8px;text-align:center;}
+  .sstat{margin-left:auto;font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+  .slist li.dimmed{color:var(--dim);}
+
+  /* radar */
+  #radar{width:100%;height:auto;display:block;}
+
+  /* goals */
+  .goal{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.1);cursor:pointer;background:transparent;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:300;}
+  .goal:last-child{border-bottom:none;}
+  .gbox{
+    width:15px;height:15px;flex:0 0 auto;
+    border:1px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--bg);font-size:11px;line-height:1;
+    transition:background 160ms ease;
+  }
+  .goal.checked .gbox{background:var(--gold);}
+  .goal.checked{color:var(--dim);}
+
+  html.js .rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease-out,transform .7s ease-out;}
+  html.js .in .rv{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){
+    html.js .rv{opacity:1;transform:none;transition:none;}
+  }
+  @media (max-width:860px){
+    .dgrid{grid-template-columns:1fr;}
+  }
+  @media (max-width:767px){
+    #live-spine{stroke-width:1px;}
+    main{padding:0 6vw 0 16vw;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .pbar .fill{transition:none;}
+  }
+</style>
+</head>
+<body>
+<svg id="spine" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:0;overflow:visible" aria-hidden="true">
+  <path id="ghost-spine" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.06" d=""/>
+  <path id="live-spine" fill="none" stroke="#C9A84C" stroke-width="1.5" d=""/>
+</svg>
+<main id="page-content" style="position:relative;z-index:1">
+
+  <header class="page-head in" data-reveal>
+    <p class="page-label rv">Dashboard</p>
+    <h1 class="rv">Professional overview.</h1>
+  </header>
+
+  <div class="dgrid" data-reveal>
+
+    <!-- PANEL 1: CURRENT STATUS -->
+    <div class="dpanel rv">
+      <p class="ptitle">Current Status</p>
+      <p class="kv"><span class="k">Role</span>Data &amp; Reporting Analyst</p>
+      <p class="kv"><span class="k">Org</span>Office of the AVP External, UWindsor</p>
+      <div class="pbar"><div class="fill" id="coop-fill"></div></div>
+      <p class="pbar-label" id="coop-label">WEEK &ndash; OF 16</p>
+    </div>
+
+    <!-- PANEL 2: ACTIVE PROJECTS -->
+    <div class="dpanel rv">
+      <p class="ptitle">Active Projects</p>
+      <ul class="slist">
+        <li><span class="sdot filled"></span>Data Source Assessment<span class="sstat">In Progress</span></li>
+        <li><span class="sdot filled"></span>BSCS Blueprint V2<span class="sstat">In Progress</span></li>
+        <li class="dimmed"><span class="scheck">&#10003;</span>NEX-GEN 2026 Series<span class="sstat">Complete</span></li>
+        <li><span class="sdot outline"></span>Net Impact VP Onboarding<span class="sstat">Upcoming</span></li>
+      </ul>
+    </div>
+
+    <!-- PANEL 3: SKILLS MATRIX -->
+    <div class="dpanel rv">
+      <p class="ptitle">Skills Matrix</p>
+      <svg id="radar" viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" aria-label="Skills radar chart"></svg>
+    </div>
+
+    <!-- PANEL 4: 2026 GOALS -->
+    <div class="dpanel rv">
+      <p class="ptitle">2026 Goals</p>
+      <button class="goal" data-goal="0"><span class="gbox">&#10003;</span>Complete Data Source Assessment</button>
+      <button class="goal" data-goal="1"><span class="gbox">&#10003;</span>Launch BSCS Blueprint V2</button>
+      <button class="goal" data-goal="2"><span class="gbox">&#10003;</span>Build and launch personal website</button>
+    </div>
+
+  </div>
+
+</main>
+<footer style="position:relative;z-index:1;text-align:center;padding:12vh 6vw 60px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Edima Essien &middot; Windsor, Ontario &middot; Built by hand &middot; No rounded corners</footer>
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- left-edge spine ---------- */
+  var spine = document.getElementById('spine');
+  var ghost = document.getElementById('ghost-spine');
+  var live  = document.getElementById('live-spine');
+  var total = 0;
+  function progress(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max <= 0) return 1;
+    return Math.min(1, Math.max(0, window.scrollY / max));
+  }
+  function buildSpine(){
+    spine.setAttribute('height', 0);
+    var h = document.documentElement.scrollHeight;
+    var w = window.innerWidth;
+    var x0 = w * 0.06;
+    var amp = Math.max(8, w * 0.015);
+    var segs = Math.max(3, Math.round(h / 700));
+    var d = 'M ' + x0 + ' 0';
+    var prevX = x0;
+    for (var i = 1; i <= segs; i++){
+      var x = (i === segs) ? x0 : x0 + amp * (i % 2 === 1 ? 1 : -1);
+      var y2 = h * i / segs;
+      var ym = h * (i - 0.5) / segs;
+      d += ' C ' + prevX + ' ' + ym + ', ' + x + ' ' + ym + ', ' + x + ' ' + y2;
+      prevX = x;
+    }
+    ghost.setAttribute('d', d);
+    live.setAttribute('d', d);
+    spine.setAttribute('height', h);
+    total = live.getTotalLength();
+    live.style.strokeDasharray = total;
+    live.style.strokeDashoffset = reduced ? 0 : total * (1 - progress());
+  }
+  window.addEventListener('scroll', function(){
+    if (reduced || !total) return;
+    live.style.strokeDashoffset = total * (1 - progress());
+  }, { passive: true });
+  var rt = null;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(buildSpine, 160); });
+  window.addEventListener('load', buildSpine);
+  if (document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ setTimeout(buildSpine, 50); }); }
+
+  /* ---------- scroll entrance ---------- */
+  var revealTargets = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  revealTargets.forEach(function(t){
+    Array.prototype.forEach.call(t.querySelectorAll('.rv'), function(el, i){
+      el.style.transitionDelay = (i * 90) + 'ms';
+    });
+  });
+  if (reduced || !('IntersectionObserver' in window)){
+    revealTargets.forEach(function(t){ t.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    revealTargets.forEach(function(t){ io.observe(t); });
+  }
+
+
+  /* ---------- PANEL 1: co-op week progress ---------- */
+  // Set CO_OP_START to your first day
+  var CO_OP_START = new Date('2026-05-04');
+  var TOTAL_WEEKS = 16;
+  (function(){
+    var ms = Date.now() - CO_OP_START.getTime();
+    var week = Math.min(TOTAL_WEEKS, Math.max(1, Math.ceil(ms / (7 * 24 * 3600 * 1000))));
+    document.getElementById('coop-label').textContent = 'WEEK ' + week + ' OF ' + TOTAL_WEEKS;
+    var pct = (week / TOTAL_WEEKS * 100).toFixed(1) + '%';
+    var fill = document.getElementById('coop-fill');
+    if (reduced){ fill.style.transition = 'none'; fill.style.width = pct; }
+    else { requestAnimationFrame(function(){ requestAnimationFrame(function(){ fill.style.width = pct; }); }); }
+  })();
+
+  /* ---------- PANEL 3: radar chart ---------- */
+  // Edit radarValues array with your self-ratings 1-10
+  var radarAxes = ['Data Analysis','CRM Systems','Python/SQL','Org Design','Content Strategy','Communication'];
+  var radarValues = [8, 7, 7, 8, 7, 8];
+  (function(){
+    var svg = document.getElementById('radar');
+    var CXr = 160, CYr = 140, R = 92, N = radarAxes.length;
+    function pt(i, r){
+      var a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      return [(CXr + r * Math.cos(a)).toFixed(1), (CYr + r * Math.sin(a)).toFixed(1)];
+    }
+    var s = '';
+    /* rings + axis lines: gold at 10% */
+    [1/3, 2/3, 1].forEach(function(f){
+      var ps = [];
+      for (var i = 0; i < N; i++) ps.push(pt(i, R * f).join(','));
+      s += '<polygon points="' + ps.join(' ') + '" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.1"/>';
+    });
+    for (var i = 0; i < N; i++){
+      var p = pt(i, R);
+      s += '<line x1="' + CXr + '" y1="' + CYr + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="#C9A84C" stroke-width="1" opacity="0.1"/>';
+    }
+    /* data polygon */
+    var dp = [];
+    for (var i = 0; i < N; i++) dp.push(pt(i, R * Math.max(0, Math.min(10, radarValues[i])) / 10).join(','));
+    s += '<polygon points="' + dp.join(' ') + '" fill="rgba(201,168,76,0.08)" stroke="#C9A84C" stroke-width="1.5"/>';
+    for (var i = 0; i < N; i++){
+      var c = dp[i].split(',');
+      s += '<rect x="' + (c[0]-2.5) + '" y="' + (c[1]-2.5) + '" width="5" height="5" fill="#C9A84C" transform="rotate(45 ' + c[0] + ' ' + c[1] + ')"/>';
+    }
+    /* labels */
+    for (var i = 0; i < N; i++){
+      var p = pt(i, R + 20);
+      var anchor = Math.abs(p[0] - CXr) < 6 ? 'middle' : (p[0] > CXr ? 'start' : 'end');
+      s += '<text x="' + p[0] + '" y="' + p[1] + '" text-anchor="' + anchor + '" dominant-baseline="middle"' +
+           ' font-family="Space Grotesk, sans-serif" font-size="9" letter-spacing="1.5" fill="#7A7468">' +
+           radarAxes[i].toUpperCase() + '</text>';
+    }
+    svg.innerHTML = s;
+  })();
+
+  /* ---------- PANEL 4: goals, persisted ---------- */
+  var GOALS_KEY = 'edima-2026-goals';
+  var goals = Array.prototype.slice.call(document.querySelectorAll('.goal'));
+  var state = [false, false, false];
+  try {
+    var saved = JSON.parse(localStorage.getItem(GOALS_KEY));
+    if (Array.isArray(saved)) state = saved;
+  } catch(e){ /* storage unavailable: toggles still work, just no persistence */ }
+  function paintGoals(){
+    goals.forEach(function(g, i){ g.classList.toggle('checked', !!state[i]); });
+  }
+  goals.forEach(function(g, i){
+    g.addEventListener('click', function(){
+      state[i] = !state[i];
+      paintGoals();
+      try { localStorage.setItem(GOALS_KEY, JSON.stringify(state)); } catch(e){}
+    });
+  });
+  paintGoals();
+
+  buildSpine();
+})();
+</script>
+
+<!-- ============================================================
+     GARDEN MAP NAVIGATION — shared component
+     Paste this block just before </body> on every page.
+     Requires style.css to be linked in <head>.
+     ============================================================ -->
+<button id="garden-trigger" aria-label="Open the garden map" aria-haspopup="dialog"></button>
+
+<div id="garden-overlay" class="gm-overlay" role="dialog" aria-modal="true" aria-label="Garden map navigation">
+  <p class="gm-title">The Garden Map</p>
+  <button id="garden-close" aria-label="Close the garden map">&times;</button>
+  <svg id="garden-map" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<script>
+/* ---------- page transitions (global, per spec) ---------- */
+function navigateTo(url){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced){ window.location.href = url; return; }
+  document.body.style.transition = 'opacity 400ms ease';
+  document.body.style.opacity = 0;
+  setTimeout(function(){ window.location.href = url; }, 400);
+}
+
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- fade in on load ---------- */
+  if (!reduced){
+    document.body.style.opacity = '0';
+    requestAnimationFrame(function(){
+      document.body.style.transition = 'opacity 400ms ease';
+      requestAnimationFrame(function(){ document.body.style.opacity = '1'; });
+    });
+  }
+
+  /* ---------- the six destinations ----------
+     each page carries one ornament symbol from the Kent system.
+     swing values reuse the spine logic: the map path meanders
+     between nodes exactly like the site spine. */
+  var PAGES = [
+    { key:'home',       label:'HOME',       url:'index.html',      swing: 0    },
+    { key:'portfolio',  label:'PORTFOLIO',  url:'portfolio.html',  swing:-1    },
+    { key:'resume',     label:'R\u00C9SUM\u00C9', url:'resume.html', swing: 1   },
+    { key:'dashboard',  label:'DASHBOARD',  url:'dashboard.html',  swing:-0.7  },
+    { key:'university', label:'UNIVERSITY', url:'university.html', swing: 0.7  },
+    { key:'calendar',   label:'CALENDAR',   url:'calendar.html',   swing: 0    }
+  ];
+
+  /* ---------- ornament geometry (uniform 500ms hover reveal) ----------
+     every stroked element: class="dr" pathLength="100".
+     builders return { span, inner } — span is the square viewBox extent. */
+  function E(tag, a){
+    var s = '<' + tag + ' class="dr" pathLength="100"';
+    for (var k in a) s += ' ' + k + '="' + a[k] + '"';
+    return s + '/>';
+  }
+
+  /* HOME: Palladian fan arch */
+  function ornHome(){
+    var s = E('path',{d:'M -36 18 A 36 36 0 0 1 36 18 L -36 18 Z'});
+    for (var i = 0; i <= 8; i++){
+      var a = i * 22.5 * Math.PI / 180;
+      s += E('path',{d:'M 0 18 L ' + (36*Math.cos(a)).toFixed(2) + ' ' + (18 - 36*Math.sin(a)).toFixed(2)});
+    }
+    var curl = 'M 0 -20 C 1.5 -25, 5 -28.5, 8 -27 C 10.5 -25.8, 10 -22.5, 7.5 -22.6 C 5.8 -22.7, 5.6 -24.6, 7 -25.4';
+    [11.25,56.25,101.25,146.25].forEach(function(t){
+      s += E('path',{d:curl, transform:'translate(0,18) rotate(' + (90 - t).toFixed(2) + ')'});
+    });
+    return { span:88, inner:s };
+  }
+
+  /* PORTFOLIO: eight-pointed star with botanical points */
+  function ornPortfolio(){
+    var s = E('rect',{x:-26,y:-26,width:52,height:52});
+    s += E('rect',{x:-26,y:-26,width:52,height:52,transform:'rotate(45)'});
+    for (var i = 0; i < 8; i++){
+      s += '<g transform="rotate(' + (i*45) + ')">'
+         + E('circle',{cx:0,cy:-40,r:2})
+         + E('path',{d:'M 0 -43 C 1.5 -45.5, 1 -48, -0.8 -49.5'})
+         + '</g>';
+    }
+    return { span:104, inner:s };
+  }
+
+  /* RESUME: botanical medallion */
+  function ornResume(){
+    var s = E('circle',{r:34});
+    s += E('path',{d:'M -19 -19 L 19 19'}) + E('path',{d:'M -19 19 L 19 -19'});
+    [0,90,180,270].forEach(function(r){
+      s += '<g transform="rotate(' + r + ')">'
+         + E('path',{d:'M -5 -33.6 C -4.5 -40, -2.5 -44.5, 0 -48'})
+         + E('path',{d:'M 5 -33.6 C 4.5 -40, 2.5 -44.5, 0 -48'})
+         + '</g>';
+    });
+    return { span:104, inner:s };
+  }
+
+  /* DASHBOARD: gauge — Palladian arch as instrument */
+  function ornDashboard(){
+    var s = E('path',{d:'M -28 14 L 28 14'});
+    s += E('path',{d:'M -28 14 A 28 28 0 0 1 28 14'});
+    [0,45,90,135,180].forEach(function(a){
+      s += E('path',{d:'M 0 -28 L 0 -23', transform:'translate(0,14) rotate(' + (a - 90) + ')'});
+    });
+    s += E('path',{d:'M 0 0 L 0 -24', transform:'translate(0,14) rotate(-50)'});
+    s += E('circle',{cx:0,cy:14,r:2.5});
+    return { span:72, inner:s };
+  }
+
+  /* UNIVERSITY: Palladian doorway */
+  function ornUniversity(){
+    var s = E('rect',{x:-23,y:-10,width:4,height:40});
+    s += E('rect',{x:19,y:-10,width:4,height:40});
+    s += E('path',{d:'M -27 -10 L 27 -10'});
+    s += E('path',{d:'M -21 -10 A 21 21 0 0 1 21 -10'});
+    s += E('path',{d:'M -4 -33 L 4 -33 L 2.4 -25.5 L -2.4 -25.5 Z'});
+    return { span:70, inner:s };
+  }
+
+  /* CALENDAR: sundial */
+  function ornCalendar(){
+    var s = E('circle',{r:32});
+    for (var i = 0; i < 12; i++){
+      s += E('path',{d:'M 0 -32 L 0 ' + (i % 3 === 0 ? -24 : -28), transform:'rotate(' + (i*30) + ')'});
+    }
+    s += E('path',{d:'M 0 0 L 0 -32', transform:'rotate(300)'});
+    return { span:70, inner:s };
+  }
+
+  var ORN = {
+    home: ornHome, portfolio: ornPortfolio, resume: ornResume,
+    dashboard: ornDashboard, university: ornUniversity, calendar: ornCalendar
+  };
+
+  /* ---------- detect current page ---------- */
+  var file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  var current = 'home';
+  PAGES.forEach(function(p){ if (p.url === file) current = p.key; });
+
+  /* ---------- trigger: current page's ornament, fully drawn ---------- */
+  var trigger = document.getElementById('garden-trigger');
+  (function(){
+    var o = ORN[current]();
+    var h = o.span / 2;
+    trigger.innerHTML =
+      '<svg viewBox="' + (-h) + ' ' + (-h) + ' ' + o.span + ' ' + o.span + '" xmlns="http://www.w3.org/2000/svg">' +
+      '<g fill="none" stroke="#C9A84C" stroke-width="2">' + o.inner + '</g></svg>';
+  })();
+
+  /* ---------- the map: spine logic between six nodes ---------- */
+  var map = document.getElementById('garden-map');
+  var CX = 300, AMP = 150, Y0 = 90, STEP = 124, NODE = 64;
+
+  var nodesXY = PAGES.map(function(p, i){
+    return { x: CX + AMP * p.swing, y: Y0 + i * STEP };
+  });
+
+  var d = 'M ' + nodesXY[0].x + ' ' + nodesXY[0].y;
+  for (var i = 1; i < nodesXY.length; i++){
+    var a = nodesXY[i-1], b = nodesXY[i];
+    var ym = (a.y + b.y) / 2;
+    d += ' C ' + a.x + ' ' + ym + ', ' + b.x + ' ' + ym + ', ' + b.x + ' ' + b.y;
+  }
+
+  var svgStr = '<path class="gm-ghost" d="' + d + '"/>' +
+               '<path class="gm-live" id="gm-live" d="' + d + '"/>';
+
+  PAGES.forEach(function(p, i){
+    var o = ORN[p.key]();
+    var k = (NODE / o.span).toFixed(4);
+    var pos = nodesXY[i];
+    svgStr +=
+      '<g class="gm-node' + (p.key === current ? ' current' : '') + '"' +
+      ' transform="translate(' + pos.x + ',' + pos.y + ')"' +
+      ' role="link" tabindex="0" aria-label="' + p.label + '"' +
+      ' data-url="' + p.url + '"' +
+      ' onclick="navigateTo(\'' + p.url + '\')">' +
+      '<circle r="34" fill="rgba(15,15,13,0.01)" stroke="none"/>' + /* hit area */
+      '<g fill="none" stroke="#C9A84C" stroke-width="1" transform="scale(' + k + ')">' + o.inner + '</g>' +
+      '<circle class="gm-base" r="4.5"/>' +
+      '<text class="gm-label" y="56">' + p.label + '</text>' +
+      '</g>';
+  });
+  map.innerHTML = svgStr;
+
+  /* live path draws when the map opens */
+  var gmLive = document.getElementById('gm-live');
+  var len = 2000;
+  try { len = gmLive.getTotalLength(); } catch(e){}
+  gmLive.style.strokeDasharray = len;
+  gmLive.style.strokeDashoffset = reduced ? 0 : len;
+
+  /* ---------- open / close ---------- */
+  var overlay = document.getElementById('garden-overlay');
+  var closeBtn = document.getElementById('garden-close');
+
+  function openMap(){
+    overlay.classList.add('open');
+    if (!reduced){
+      requestAnimationFrame(function(){ gmLive.style.strokeDashoffset = 0; });
+    }
+    closeBtn.focus();
+  }
+  function closeMap(){
+    overlay.classList.remove('open');
+    if (!reduced) gmLive.style.strokeDashoffset = len;
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', openMap);
+  closeBtn.addEventListener('click', closeMap);
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closeMap();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeMap();
+    if ((e.key === 'Enter' || e.key === ' ') &&
+        document.activeElement && document.activeElement.classList &&
+        document.activeElement.classList.contains('gm-node')){
+      e.preventDefault();
+      navigateTo(document.activeElement.getAttribute('data-url'));
+    }
+  });
+})();
+</script>
+<!-- ============================================================
+     END GARDEN MAP NAVIGATION
+     ============================================================ -->
+
+</body>
+</html>
