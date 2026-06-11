@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edima Essien — Data &amp; Strategy</title>
+<meta name="description" content="Edima Essien. Data & Reporting Analyst, founder of BSCS, BComm Honours + Computer Science Co-op at the University of Windsor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F0F0D;
+    --gold:#C9A84C;
+    --ink:#E8E0D0;
+    --dim:#7A7468;
+    --card:#181814;
+    --card-hover:#1E1E18;
+  }
+  *,*::before,*::after{box-sizing:border-box;border-radius:0 !important;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background-color:var(--bg);
+    /* grain — exact spec */
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-repeat:repeat;
+    background-size:200px 200px;
+    color:var(--ink);
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:300;
+    font-size:16px;
+    line-height:1.65;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:var(--bg);}
+  a{color:var(--gold);text-decoration:none;}
+  :focus-visible{outline:1px solid var(--gold);outline-offset:4px;}
+
+  /* ================= ORNAMENTS ================= */
+  /* spine-mounted ornaments: hidden until activated; every stroked element
+     carries pathLength="100" and an inline per-element transition that
+     encodes its draw delay + duration, so each ornament stages itself. */
+  #ornament-layer{
+    position:absolute;top:0;left:0;width:100%;height:0;
+    z-index:2;pointer-events:none;
+  }
+  .ornament{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    opacity:0;
+  }
+  .ornament.active{opacity:1;}
+  .ornament svg, .o-inflow svg{width:100%;height:100%;display:block;overflow:visible;}
+  .ornament .dr, .o-inflow .dr{
+    stroke-dasharray:100;
+    stroke-dashoffset:100;
+  }
+  .ornament.active .dr, .o-inflow.active .dr{
+    stroke-dashoffset:0;
+  }
+  #ornament-about{width:72px;height:72px;}
+  #ornament-work{width:76px;height:76px;}
+  #ornament-now{width:70px;height:70px;}
+  #ornament-contact{width:70px;height:70px;}
+  /* hero ornament: in document flow, draws on load */
+  #ornament-hero{width:80px;height:80px;margin:0 auto 28px;opacity:1;}
+
+  /* ================= LAYOUT ================= */
+  #page-content{position:relative;z-index:1;}
+  section{
+    display:flex;
+    align-items:center;
+    min-height:88vh;
+    padding:9vh 6vw;
+  }
+  section[data-align="left"]{justify-content:flex-start;}
+  section[data-align="right"]{justify-content:flex-end;}
+  section[data-align="center"]{justify-content:center;}
+
+  .label{
+    font-size:11px;font-weight:500;letter-spacing:4px;
+    color:var(--gold);margin:0 0 48px;text-transform:uppercase;
+  }
+
+  /* ================= HERO ================= */
+  #hero{
+    min-height:100dvh;
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+  }
+  #hero h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:400;
+    font-size:clamp(40px,9.5vw,72px);
+    letter-spacing:-1px;
+    line-height:1;
+    margin:0;
+    white-space:nowrap;
+  }
+  #hero h1 .nm{display:inline-block;}
+  #hero h1 .nm-l{color:var(--gold);animation:fromCenterL .7s ease-out both;}
+  #hero h1 .nm-r{color:var(--ink);animation:fromCenterR .7s ease-out both;}
+  @keyframes fromCenterL{from{opacity:0;transform:translateX(36px);}to{opacity:1;transform:translateX(0);}}
+  @keyframes fromCenterR{from{opacity:0;transform:translateX(-36px);}to{opacity:1;transform:translateX(0);}}
+  .tagline{
+    margin:24px auto 0;
+    max-width:460px;
+    font-size:17px;
+    color:var(--dim);
+    animation:fadeUp .7s ease-out .5s both;
+  }
+  .cta{
+    display:inline-block;
+    margin-top:36px;
+    font-size:11px;font-weight:500;letter-spacing:4px;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    padding:14px 32px;
+    background:transparent;
+    transition:background 160ms ease,color 160ms ease;
+    animation:fadeUp .7s ease-out .9s both;
+  }
+  .cta:hover{background:var(--gold);color:var(--bg);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ================= ABOUT ================= */
+  #about .inner{max-width:540px;}
+  #about p{margin:0 0 1.4em;font-size:16px;line-height:1.75;}
+  #about p:last-of-type{margin-bottom:0;}
+  .rule{
+    width:80px;height:1px;border:0;
+    background:var(--gold);opacity:.2;
+    margin:48px 0 0;
+  }
+
+  /* ================= WORK ================= */
+  #work .inner{width:min(720px,100%);}
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2px; /* the gaps ARE the borders */
+  }
+  .card{
+    background:var(--card);
+    padding:32px;
+    position:relative;
+    transition:background .25s ease;
+  }
+  .card:hover{background:var(--card-hover);}
+  .card::after{
+    content:"";
+    position:absolute;inset:0;
+    border:1px solid var(--gold);
+    opacity:0;
+    pointer-events:none;
+    clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0);
+  }
+  .card:hover::after{opacity:1;animation:trace .4s linear forwards;}
+  @keyframes trace{
+    0%  {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0);}
+    25% {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0);}
+    50% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%);}
+    75% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%);}
+    100%{clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0);}
+  }
+  .card h3{
+    font-family:'Fraunces',serif;font-weight:500;
+    font-size:21px;color:var(--ink);margin:0;
+  }
+  .card .cat{
+    font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);margin:8px 0 14px;text-transform:uppercase;
+  }
+  .card p{font-size:14px;color:var(--dim);line-height:1.65;margin:0;}
+
+  /* ================= NOW ================= */
+  #now .inner{max-width:560px;width:100%;}
+  .now-item{
+    border-left:1px solid var(--gold);
+    padding-left:20px;
+    margin-bottom:32px;
+  }
+  .now-item:last-child{margin-bottom:0;}
+  .now-item .nlabel{
+    font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);margin:0 0 6px;text-transform:uppercase;
+  }
+  .now-item .ntext{font-size:15px;color:var(--ink);margin:0;}
+
+  /* ================= CONTACT ================= */
+  #contact{
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+    min-height:0;
+    padding-top:64px;
+    padding-bottom:64px;
+  }
+  #contact h2{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:36px;letter-spacing:-.5px;
+    color:var(--ink);margin:0 0 16px;
+  }
+  .email{
+    display:inline-block;
+    font-size:15px;letter-spacing:1px;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    padding:12px 28px;
+    transition:background 160ms ease,color 160ms ease;
+  }
+  .email:hover{background:var(--gold);color:var(--bg);}
+
+  footer{
+    position:relative;z-index:1;text-align:center;
+    padding:10vh 6vw 60px;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  }
+
+  /* ================= SCROLL ENTRANCE ================= */
+  html.js .rv{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .7s ease-out,transform .7s ease-out;
+  }
+  html.js section.in .rv{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ================= MOBILE ================= */
+  @media (max-width:767px){
+    #live-spine{stroke-width:1px;}
+    .ornament{transform:translate(-50%,-50%) scale(.72);}
+    #ornament-hero{width:64px;height:64px;}
+    section{padding-left:22vw;padding-right:5vw;min-height:0;padding-top:12vh;padding-bottom:12vh;}
+    section[data-align]{justify-content:flex-start;}
+    #hero{min-height:100dvh;align-items:flex-start;text-align:left;padding-left:22vw;}
+    #hero h1{white-space:normal;}
+    #ornament-hero{margin:0 0 28px;}
+    .tagline{margin-left:0;}
+    .grid{grid-template-columns:1fr;}
+    #contact{align-items:flex-start;text-align:left;}
+  }
+  @media (max-width:520px){
+    section{padding-left:18vw;}
+    #hero{padding-left:18vw;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .nm-l,.nm-r,.tagline,.cta{animation:none !important;}
+    .ornament,.o-inflow{opacity:1 !important;}
+    .ornament .dr,.o-inflow .dr{
+      stroke-dashoffset:0 !important;
+      transition:none !important;
+    }
+    html.js .rv{opacity:1;transform:none;transition:none;}
+    .card:hover::after{animation:none;clip-path:none;}
+  }
+</style>
+</head>
+<body>
+
+<svg id="spine" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:0;overflow:visible" aria-hidden="true">
+  <path id="ghost-spine" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.06" d=""/>
+  <path id="live-spine" fill="none" stroke="#C9A84C" stroke-width="1.5" d=""/>
+</svg>
+
+<div id="ornament-layer" aria-hidden="true">
+  <div class="ornament" id="ornament-about"></div>
+  <div class="ornament" id="ornament-work"></div>
+  <div class="ornament" id="ornament-now"></div>
+  <div class="ornament" id="ornament-contact"></div>
+</div>
+
+<main id="page-content" style="position:relative;z-index:1">
+
+  <!-- HERO -->
+  <section id="hero" data-align="center">
+    <div class="o-inflow" id="ornament-hero" aria-hidden="true"></div>
+    <h1><span class="nm nm-l">EDIMA</span> <span class="nm nm-r">ESSIEN</span></h1>
+    <p class="tagline">I turn raw data into decisions and ideas into organizations.</p>
+    <a class="cta" href="#work">VIEW MY WORK</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" data-align="left">
+    <div class="inner">
+      <p class="rv">I'm a data and reporting analyst mapping how information moves through institutions: CRM systems, marketing platforms, the infrastructure most people never see.</p>
+      <p class="rv">I'm also a builder. I founded BSCS at the University of Windsor, wrote its 41-page organizational blueprint, and still run it. The point is building things that outlast the person who started them.</p>
+      <p class="rv">The CS and business combination is by design, not accident. The goal is to make data useful and organizations worth being part of.</p>
+      <hr class="rule rv">
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work" data-align="right">
+    <div class="inner">
+      <p class="label rv">Work</p>
+      <div class="grid">
+        <div class="card rv">
+          <h3>Data Source Assessment</h3>
+          <p class="cat">CRM &amp; Data Systems</p>
+          <p>Mapping how data moves through four institutional systems: Salesforce, Raiser's Edge, Agility PR, and Constant Contact. Building data dictionaries and process maps for the Office of the AVP External at the University of Windsor.</p>
+        </div>
+        <div class="card rv">
+          <h3>BSCS</h3>
+          <p class="cat">Organization Design</p>
+          <p>Founded Black Students in Computer Science at UWindsor in December 2025. Fifty members, UWSA-registered, 41-page organizational blueprint covering governance, SOPs, membership lifecycle, and a national chapter expansion framework.</p>
+        </div>
+        <div class="card rv">
+          <h3>NEX-GEN 2026</h3>
+          <p class="cat">Content Series</p>
+          <p>Nine-post LinkedIn series built from the NSBE UWindsor conference. Covers data work in practice, the CS-business intersection, and what student community in tech actually looks like.</p>
+        </div>
+        <div class="card rv">
+          <h3>Net Impact Odette</h3>
+          <p class="cat">Leadership</p>
+          <p>VP Special Projects for 2026/2027 at the Odette School of Business. Connecting business decisions to social impact outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOW -->
+  <section id="now" data-align="left">
+    <div class="inner">
+      <p class="label rv">Now</p>
+      <div class="now-item rv">
+        <p class="nlabel">Building</p>
+        <p class="ntext">Completing the Data Source Assessment at UWindsor's Office of the AVP External. Also working on BSCS Organizational Blueprint Version 2.</p>
+      </div>
+      <div class="now-item rv">
+        <p class="nlabel">Reading</p>
+        <p class="ntext">[Add current read]</p>
+      </div>
+      <div class="now-item rv">
+        <p class="nlabel">Thinking</p>
+        <p class="ntext">How the gap between data collection and data use gets wider the more systems an organization runs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" data-align="center">
+    <h2 class="rv">LET'S WORK TOGETHER.</h2>
+    <a class="email rv" href="mailto:">edima.essien@[domain]</a>
+  </section>
+
+</main>
+
+<footer>Edima Essien · Windsor, Ontario · Built by hand · No rounded corners</footer>
+
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+
+  var spine = document.getElementById('spine');
+  var ghost = document.getElementById('ghost-spine');
+  var live  = document.getElementById('live-spine');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var total = 0;
+
+  /* ---------- PATH GENERATION ---------- */
+  function generateSpinePath(totalHeight){
+    var w = window.innerWidth;
+    var mobile = w < 768;
+    var cx = mobile ? w * 0.12 : w * 0.5;
+    var amplitude = mobile ? w * 0.08 : w * 0.22;
+    var sections = 5;
+    var segH = totalHeight / sections;
+    var d = 'M ' + cx + ' 0';
+    var swings = [0, -1, 1, -0.6, 0.4, 0];
+    for (var i = 0; i < sections; i++){
+      var y1 = (i + 0.5) * segH;
+      var y2 = (i + 1) * segH;
+      var x1 = cx + amplitude * swings[i];
+      var x2 = cx + amplitude * swings[i + 1];
+      d += ' C ' + x1 + ' ' + y1 + ', ' + x2 + ' ' + y1 + ', ' + x2 + ' ' + y2;
+    }
+    return d;
+  }
+
+  /* ---------- ORNAMENT BUILDERS ----------
+     Palladian core, botanical edges. 1px gold line work, fill none.
+     Every stroked element: pathLength="100" + inline transition encoding
+     its place in the draw sequence (delay, duration). */
+  function attrs(delay, dur){
+    return 'class="dr" pathLength="100" style="transition:stroke-dashoffset ' + dur + 'ms ease-out ' + delay + 'ms"';
+  }
+  function wrap(viewBox, inner){
+    return '<svg viewBox="' + viewBox + '" xmlns="http://www.w3.org/2000/svg">' +
+           '<g fill="none" stroke="#C9A84C" stroke-width="1">' + inner + '</g></svg>';
+  }
+
+  /* HERO: Palladian fan arch. semicircle r36, base at y=18, nine radials,
+     acanthus curls in every other gap. whole thing draws in 1400ms. */
+  function heroFan(){
+    var s = '';
+    s += '<path ' + attrs(0,1400) + ' d="M -36 18 A 36 36 0 0 1 36 18 L -36 18 Z"/>';
+    for (var i = 0; i <= 8; i++){
+      var a = i * 22.5 * Math.PI / 180;
+      var x = (36 * Math.cos(a)).toFixed(2);
+      var y = (18 - 36 * Math.sin(a)).toFixed(2);
+      s += '<path ' + attrs(0,1400) + ' d="M 0 18 L ' + x + ' ' + y + '"/>';
+    }
+    var curl = 'M 0 -20 C 1.5 -25, 5 -28.5, 8 -27 C 10.5 -25.8, 10 -22.5, 7.5 -22.6 C 5.8 -22.7, 5.6 -24.6, 7 -25.4';
+    [11.25, 56.25, 101.25, 146.25].forEach(function(theta){
+      var rot = (90 - theta).toFixed(2);
+      s += '<path ' + attrs(0,1400) + ' d="' + curl + '" transform="translate(0,18) rotate(' + rot + ')"/>';
+    });
+    return wrap('-40 -40 80 80', s);
+  }
+
+  /* ABOUT: botanical medallion. circle (0ms), X cross (300ms),
+     four leaves one by one (500ms, 150ms stagger). */
+  function aboutMedallion(){
+    var s = '';
+    s += '<circle ' + attrs(0,500) + ' r="34"/>';
+    s += '<path ' + attrs(300,400) + ' d="M -19 -19 L 19 19"/>';
+    s += '<path ' + attrs(300,400) + ' d="M -19 19 L 19 -19"/>';
+    var leafA = 'M -5 -33.6 C -4.5 -40, -2.5 -44.5, 0 -48';
+    var leafB = 'M 5 -33.6 C 4.5 -40, 2.5 -44.5, 0 -48';
+    [0,90,180,270].forEach(function(r,i){
+      var d = 500 + i * 150;
+      s += '<g transform="rotate(' + r + ')">' +
+           '<path ' + attrs(d,450) + ' d="' + leafA + '"/>' +
+           '<path ' + attrs(d,450) + ' d="' + leafB + '"/></g>';
+    });
+    return wrap('-36 -36 72 72', s);
+  }
+
+  /* WORK: two overlapping 52px squares (eight-pointed star), botanical
+     dot + curl at each of the eight points. sq1 0ms, sq2 300ms, points 700ms+80i. */
+  function workStar(){
+    var s = '';
+    s += '<rect ' + attrs(0,500) + ' x="-26" y="-26" width="52" height="52"/>';
+    s += '<rect ' + attrs(300,500) + ' x="-26" y="-26" width="52" height="52" transform="rotate(45)"/>';
+    for (var i = 0; i < 8; i++){
+      var d = 700 + i * 80;
+      s += '<g transform="rotate(' + (i * 45) + ')">' +
+           '<circle ' + attrs(d,300) + ' cx="0" cy="-40" r="2"/>' +
+           '<path ' + attrs(d,300) + ' d="M 0 -43 C 1.5 -45.5, 1 -48, -0.8 -49.5"/></g>';
+    }
+    return wrap('-38 -38 76 76', s);
+  }
+
+  /* NOW: sundial. circle (0ms), 12 ticks staggered from 200ms
+     (long at 12/3/6/9), gnomon at 10 o'clock (800ms, 600ms reveal). */
+  function nowSundial(){
+    var s = '';
+    s += '<circle ' + attrs(0,500) + ' r="32"/>';
+    for (var i = 0; i < 12; i++){
+      var inner = (i % 3 === 0) ? -24 : -28;
+      s += '<path ' + attrs(200 + i * 50, 250) + ' d="M 0 -32 L 0 ' + inner + '" transform="rotate(' + (i * 30) + ')"/>';
+    }
+    s += '<path ' + attrs(800,600) + ' d="M 0 0 L 0 -32" transform="rotate(300)"/>';
+    return wrap('-35 -35 70 70', s);
+  }
+
+  /* CONTACT: Palladian doorway. columns (0ms), lintel (300ms),
+     arch (500ms, 600ms ease-out), keystone (900ms). */
+  function contactDoorway(){
+    var s = '';
+    s += '<rect ' + attrs(0,450) + ' x="-23" y="-10" width="4" height="40"/>';
+    s += '<rect ' + attrs(0,450) + ' x="19" y="-10" width="4" height="40"/>';
+    s += '<path ' + attrs(300,300) + ' d="M -27 -10 L 27 -10"/>';
+    s += '<path ' + attrs(500,600) + ' d="M -21 -10 A 21 21 0 0 1 21 -10"/>';
+    s += '<path ' + attrs(900,350) + ' d="M -4 -33 L 4 -33 L 2.4 -25.5 L -2.4 -25.5 Z"/>';
+    return wrap('-35 -35 70 70', s);
+  }
+
+  var heroOrn = document.getElementById('ornament-hero');
+  heroOrn.innerHTML = heroFan();
+  var spineOrnaments = {
+    about:   { el: document.getElementById('ornament-about'),   build: aboutMedallion },
+    work:    { el: document.getElementById('ornament-work'),    build: workStar },
+    now:     { el: document.getElementById('ornament-now'),     build: nowSundial },
+    contact: { el: document.getElementById('ornament-contact'), build: contactDoorway }
+  };
+  Object.keys(spineOrnaments).forEach(function(key){
+    spineOrnaments[key].el.innerHTML = spineOrnaments[key].build();
+  });
+
+  /* ---------- ORNAMENT ACTIVATION (spine thresholds) ---------- */
+  var ornamentThresholds = { about: 0.16, work: 0.36, now: 0.62, contact: 0.84 };
+  var activated = new Set();
+  function updateOrnaments(progress){
+    Object.entries(ornamentThresholds).forEach(function(entry){
+      var key = entry[0], threshold = entry[1];
+      if (progress >= threshold && !activated.has(key)){
+        activated.add(key);
+        spineOrnaments[key].el.classList.add('active');
+      }
+    });
+  }
+
+  /* each spine ornament centered on the path at its threshold depth */
+  function placeOrnaments(){
+    Object.keys(ornamentThresholds).forEach(function(key){
+      var el = spineOrnaments[key].el;
+      var half = (el.offsetWidth || 76) / 2;
+      var len = total * ornamentThresholds[key];
+      len = Math.max(len, half + 14);
+      len = Math.min(len, total - 4);
+      var p = live.getPointAtLength(len);
+      el.style.left = p.x + 'px';
+      el.style.top  = p.y + 'px';
+    });
+  }
+
+  /* ---------- BUILD + SCROLL DRAW ---------- */
+  function currentProgress(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max <= 0) return 1;
+    return Math.min(1, Math.max(0, window.scrollY / max));
+  }
+
+  function build(){
+    spine.setAttribute('height', 0);
+    var h = document.documentElement.scrollHeight;
+    var path = generateSpinePath(h);
+    live.setAttribute('d', path);
+    ghost.setAttribute('d', path);
+    spine.setAttribute('height', h);
+    total = live.getTotalLength();
+    live.style.strokeDasharray = total;
+    placeOrnaments();
+    if (reduced){
+      live.style.strokeDashoffset = 0;
+      Object.keys(spineOrnaments).forEach(function(key){
+        activated.add(key);
+        spineOrnaments[key].el.classList.add('active');
+      });
+    } else {
+      var p = currentProgress();
+      live.style.strokeDashoffset = total * (1 - p);
+      updateOrnaments(p);
+    }
+  }
+
+  window.addEventListener('scroll', function(){
+    if (reduced || !total) return;
+    var progress = currentProgress();
+    live.style.strokeDashoffset = total * (1 - progress);
+    updateOrnaments(progress);
+  }, { passive: true });
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(build, 160);
+  });
+
+  /* ---------- GLOBAL SCROLL ENTRANCE ---------- */
+  var observed = ['about','work','now','contact'].map(function(id){
+    return document.getElementById(id);
+  });
+  observed.forEach(function(sec){
+    Array.prototype.forEach.call(sec.querySelectorAll('.rv'), function(el, i){
+      el.style.transitionDelay = (i * 90) + 'ms';
+    });
+  });
+  if (reduced){
+    observed.forEach(function(sec){ sec.classList.add('in'); });
+  } else if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    observed.forEach(function(sec){ io.observe(sec); });
+  } else {
+    observed.forEach(function(sec){ sec.classList.add('in'); });
+  }
+
+  /* ---------- INIT ---------- */
+  function init(){
+    build();
+    /* hero fan draws on load, 1400ms */
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        heroOrn.classList.add('active');
+      });
+    });
+  }
+  window.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('load', build);
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ setTimeout(build, 50); });
+  }
+  if (document.readyState !== 'loading') init();
+})();
+</script>
+</body>
+</html>
