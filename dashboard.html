@@ -283,20 +283,21 @@
 </script>
 
 <!-- ============================================================
-     GARDEN MAP NAVIGATION — shared component
+     GARDEN MAP NAVIGATION (cosmic) : shared component
      Paste this block just before </body> on every page.
      Requires style.css to be linked in <head>.
      ============================================================ -->
 <button id="garden-trigger" aria-label="Open the garden map" aria-haspopup="dialog"></button>
 
 <div id="garden-overlay" class="gm-overlay" role="dialog" aria-modal="true" aria-label="Garden map navigation">
+  <canvas id="gm-canvas" aria-hidden="true"></canvas>
   <p class="gm-title">The Garden Map</p>
   <button id="garden-close" aria-label="Close the garden map">&times;</button>
   <svg id="garden-map" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
 </div>
 
 <script>
-/* ---------- page transitions (global, per spec) ---------- */
+/* ---------- page transitions (global) ---------- */
 function navigateTo(url){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced){ window.location.href = url; return; }
@@ -307,6 +308,7 @@ function navigateTo(url){
 
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
 
   /* ---------- fade in on load ---------- */
   if (!reduced){
@@ -317,10 +319,7 @@ function navigateTo(url){
     });
   }
 
-  /* ---------- the six destinations ----------
-     each page carries one ornament symbol from the Kent system.
-     swing values reuse the spine logic: the map path meanders
-     between nodes exactly like the site spine. */
+  /* ---------- the six destinations ---------- */
   var PAGES = [
     { key:'home',       label:'HOME',       url:'index.html',      swing: 0    },
     { key:'portfolio',  label:'PORTFOLIO',  url:'portfolio.html',  swing:-1    },
@@ -330,16 +329,14 @@ function navigateTo(url){
     { key:'calendar',   label:'CALENDAR',   url:'calendar.html',   swing: 0    }
   ];
 
-  /* ---------- ornament geometry (uniform 500ms hover reveal) ----------
-     every stroked element: class="dr" pathLength="100".
-     builders return { span, inner } — span is the square viewBox extent. */
+  /* ---------- ornament geometry ----------
+     every element: class="dr", pathLength="100", and explicit fill="none".
+     stroke only; nothing in the map ever fills. */
   function E(tag, a){
-    var s = '<' + tag + ' class="dr" pathLength="100"';
+    var s = '<' + tag + ' class="dr" pathLength="100" fill="none"';
     for (var k in a) s += ' ' + k + '="' + a[k] + '"';
     return s + '/>';
   }
-
-  /* HOME: Palladian fan arch */
   function ornHome(){
     var s = E('path',{d:'M -36 18 A 36 36 0 0 1 36 18 L -36 18 Z'});
     for (var i = 0; i <= 8; i++){
@@ -352,8 +349,6 @@ function navigateTo(url){
     });
     return { span:88, inner:s };
   }
-
-  /* PORTFOLIO: eight-pointed star with botanical points */
   function ornPortfolio(){
     var s = E('rect',{x:-26,y:-26,width:52,height:52});
     s += E('rect',{x:-26,y:-26,width:52,height:52,transform:'rotate(45)'});
@@ -365,8 +360,6 @@ function navigateTo(url){
     }
     return { span:104, inner:s };
   }
-
-  /* RESUME: botanical medallion */
   function ornResume(){
     var s = E('circle',{r:34});
     s += E('path',{d:'M -19 -19 L 19 19'}) + E('path',{d:'M -19 19 L 19 -19'});
@@ -378,8 +371,6 @@ function navigateTo(url){
     });
     return { span:104, inner:s };
   }
-
-  /* DASHBOARD: gauge — Palladian arch as instrument */
   function ornDashboard(){
     var s = E('path',{d:'M -28 14 L 28 14'});
     s += E('path',{d:'M -28 14 A 28 28 0 0 1 28 14'});
@@ -390,8 +381,6 @@ function navigateTo(url){
     s += E('circle',{cx:0,cy:14,r:2.5});
     return { span:72, inner:s };
   }
-
-  /* UNIVERSITY: Palladian doorway */
   function ornUniversity(){
     var s = E('rect',{x:-23,y:-10,width:4,height:40});
     s += E('rect',{x:19,y:-10,width:4,height:40});
@@ -400,8 +389,6 @@ function navigateTo(url){
     s += E('path',{d:'M -4 -33 L 4 -33 L 2.4 -25.5 L -2.4 -25.5 Z'});
     return { span:70, inner:s };
   }
-
-  /* CALENDAR: sundial */
   function ornCalendar(){
     var s = E('circle',{r:32});
     for (var i = 0; i < 12; i++){
@@ -410,7 +397,6 @@ function navigateTo(url){
     s += E('path',{d:'M 0 0 L 0 -32', transform:'rotate(300)'});
     return { span:70, inner:s };
   }
-
   var ORN = {
     home: ornHome, portfolio: ornPortfolio, resume: ornResume,
     dashboard: ornDashboard, university: ornUniversity, calendar: ornCalendar
@@ -421,7 +407,7 @@ function navigateTo(url){
   var current = 'home';
   PAGES.forEach(function(p){ if (p.url === file) current = p.key; });
 
-  /* ---------- trigger: current page's ornament, fully drawn ---------- */
+  /* ---------- trigger ---------- */
   var trigger = document.getElementById('garden-trigger');
   (function(){
     var o = ORN[current]();
@@ -429,6 +415,10 @@ function navigateTo(url){
     trigger.innerHTML =
       '<svg viewBox="' + (-h) + ' ' + (-h) + ' ' + o.span + ' ' + o.span + '" xmlns="http://www.w3.org/2000/svg">' +
       '<g fill="none" stroke="#C9A84C" stroke-width="2">' + o.inner + '</g></svg>';
+    Array.prototype.forEach.call(trigger.querySelectorAll('.dr'), function(el){
+      el.style.strokeDasharray = 'none';
+      el.style.strokeDashoffset = '0';
+    });
   })();
 
   /* ---------- the map: spine logic between six nodes ---------- */
@@ -438,7 +428,6 @@ function navigateTo(url){
   var nodesXY = PAGES.map(function(p, i){
     return { x: CX + AMP * p.swing, y: Y0 + i * STEP };
   });
-
   var d = 'M ' + nodesXY[0].x + ' ' + nodesXY[0].y;
   for (var i = 1; i < nodesXY.length; i++){
     var a = nodesXY[i-1], b = nodesXY[i];
@@ -446,8 +435,11 @@ function navigateTo(url){
     d += ' C ' + a.x + ' ' + ym + ', ' + b.x + ' ' + ym + ', ' + b.x + ' ' + b.y;
   }
 
-  var svgStr = '<path class="gm-ghost" d="' + d + '"/>' +
-               '<path class="gm-live" id="gm-live" d="' + d + '"/>';
+  /* the spiral path: three layered strokes on the same d, all fill="none" */
+  var svgStr =
+    '<path class="gm-glow" fill="none" d="' + d + '"/>' +
+    '<path class="gm-coreglow" fill="none" d="' + d + '"/>' +
+    '<path class="gm-thread" fill="none" d="' + d + '"/>';
 
   PAGES.forEach(function(p, i){
     var o = ORN[p.key]();
@@ -456,45 +448,241 @@ function navigateTo(url){
     svgStr +=
       '<g class="gm-node' + (p.key === current ? ' current' : '') + '"' +
       ' transform="translate(' + pos.x + ',' + pos.y + ')"' +
+      ' style="--dd:' + (900 + i*150) + 'ms;--ld:' + (1200 + i*100) + 'ms"' +
       ' role="link" tabindex="0" aria-label="' + p.label + '"' +
       ' data-url="' + p.url + '"' +
       ' onclick="navigateTo(\'' + p.url + '\')">' +
-      '<circle r="34" fill="rgba(15,15,13,0.01)" stroke="none"/>' + /* hit area */
-      '<g fill="none" stroke="#C9A84C" stroke-width="1" transform="scale(' + k + ')">' + o.inner + '</g>' +
+      /* burst layer sits outside the counter-rotating group so expanding
+         circles never disturb its bounding box */
+      '<g class="gm-burst"></g>' +
+      '<g class="gm-upright">' +
+      /* symmetric r=60 hit area keeps the fill-box center exactly on the
+         path point, so the counter-rotation pivot is exact */
+      '<circle r="60" fill="none" stroke="none" pointer-events="all"/>' +
+      '<g class="gm-ornwrap"><g fill="none" stroke="#C9A84C" stroke-width="1" transform="scale(' + k + ')">' + o.inner + '</g></g>' +
       '<circle class="gm-base" r="4.5"/>' +
-      '<text class="gm-label" y="56">' + p.label + '</text>' +
-      '</g>';
+      '<text class="gm-label" y="50">' + p.label + '</text>' +
+      '</g></g>';
   });
   map.innerHTML = svgStr;
 
-  /* live path draws when the map opens */
-  var gmLive = document.getElementById('gm-live');
-  var len = 2000;
-  try { len = gmLive.getTotalLength(); } catch(e){}
-  gmLive.style.strokeDasharray = len;
-  gmLive.style.strokeDashoffset = reduced ? 0 : len;
+  var glow = map.querySelector('.gm-glow');
+  var coreglow = map.querySelector('.gm-coreglow');
+  var pathLen = 2000;
+  try { pathLen = glow.getTotalLength(); } catch(e){}
+
+  /* ---------- supernova bursts ---------- */
+  function burst(node, strong){
+    if (reduced) return;
+    var layer = node.querySelector('.gm-burst');
+    [60, 80, 100].forEach(function(r, i){
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('r', r);
+      c.setAttribute('fill', 'none');
+      c.setAttribute('stroke', '#C9A84C');
+      c.setAttribute('stroke-width', strong ? 2 : 1.25);
+      c.style.opacity = '0';
+      c.style.animation = 'gmNova 800ms ease-out ' + (i * 150) + 'ms forwards';
+      layer.appendChild(c);
+      setTimeout(function(){ if (c.parentNode) c.parentNode.removeChild(c); }, 1500 + i * 150);
+    });
+  }
+
+  /* ---------- deep space canvas: nebula, star field, shooting stars ---------- */
+  var overlay = document.getElementById('garden-overlay');
+  var canvas = document.getElementById('gm-canvas');
+  var ctx = canvas.getContext('2d');
+  var stars = [], shoots = [], rafId = null, openT = 0, nextShoot = 0;
+
+  function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
+  function clamp01(v){ return Math.min(1, Math.max(0, v)); }
+
+  function sizeCanvas(){
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var w = overlay.clientWidth, h = overlay.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    genStars(w, h);
+  }
+  function genStars(w, h){
+    stars = [];
+    var layers = [
+      { n:140, r:[0.5,0.5], a:[0.2,0.4], p:[3000,5000] }, /* far */
+      { n:100, r:[1,1],     a:[0.4,0.7], p:[1500,3000] }, /* mid */
+      { n:60,  r:[1.5,2],   a:[0.8,1.0], p:[800,1500]  }  /* near */
+    ];
+    var cx = w/2, cy = h/2, reach = Math.hypot(w, h) * 0.62;
+    layers.forEach(function(L){
+      for (var i = 0; i < L.n; i++){
+        var fx = Math.random() * w, fy = Math.random() * h;
+        var dx = fx - cx, dy = fy - cy, m = Math.hypot(dx, dy) || 1;
+        stars.push({
+          fx: fx, fy: fy,
+          ex: cx + dx/m * reach, ey: cy + dy/m * reach, /* warp-in start, beyond the edge */
+          r: L.r[0] + Math.random() * (L.r[1] - L.r[0]),
+          a: L.a[0] + Math.random() * (L.a[1] - L.a[0]),
+          p: L.p[0] + Math.random() * (L.p[1] - L.p[0]),
+          ph: Math.random() * Math.PI * 2,
+          wd: Math.random() * 300,
+          c: Math.random() < 0.5 ? '255,255,255' : '255,244,224' /* white / warm white */
+        });
+      }
+    });
+  }
+
+  function paintNebula(t, w, h){
+    var alpha = 0.4 * easeOut(clamp01((t - 100) / 600)); /* step 2: fade in */
+    if (alpha <= 0) return;
+    var dmax = Math.max(w, h);
+    ctx.save();
+    ctx.translate(w/2, h/2);
+    ctx.rotate((t / 40000) * Math.PI * 2); /* one revolution every 40s */
+    ctx.globalAlpha = alpha;
+    if (ctx.createConicGradient){
+      var g = ctx.createConicGradient(0, 0, 0);
+      g.addColorStop(0.00, '#0F0F0D');
+      g.addColorStop(0.10, '#1a0a2e');
+      g.addColorStop(0.24, '#0F0F0D');
+      g.addColorStop(0.38, '#0d1b2a');
+      g.addColorStop(0.54, '#0F0F0D');
+      g.addColorStop(0.70, '#2a1500');
+      g.addColorStop(0.86, '#0F0F0D');
+      g.addColorStop(1.00, '#0F0F0D');
+      ctx.fillStyle = g;
+      ctx.fillRect(-dmax, -dmax, dmax*2, dmax*2);
+    } else {
+      /* fallback: three slowly orbiting radial arms */
+      [['#1a0a2e',0],['#0d1b2a',2.1],['#2a1500',4.2]].forEach(function(arm){
+        var ax = Math.cos(arm[1]) * dmax * 0.3, ay = Math.sin(arm[1]) * dmax * 0.3;
+        var rg = ctx.createRadialGradient(ax, ay, 0, ax, ay, dmax * 0.55);
+        rg.addColorStop(0, arm[0]); rg.addColorStop(1, 'rgba(15,15,13,0)');
+        ctx.fillStyle = rg;
+        ctx.fillRect(-dmax, -dmax, dmax*2, dmax*2);
+      });
+    }
+    ctx.restore();
+    /* radial falloff so the galaxy darkens toward the edges */
+    var v = ctx.createRadialGradient(w/2, h/2, Math.min(w,h)*0.2, w/2, h/2, Math.max(w,h)*0.75);
+    v.addColorStop(0, 'rgba(15,15,13,0)');
+    v.addColorStop(1, 'rgba(15,15,13,' + (alpha * 0.9) + ')');
+    ctx.fillStyle = v;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function paintStars(t, now){
+    for (var i = 0; i < stars.length; i++){
+      var s = stars[i];
+      var wp = reduced ? 1 : easeOut(clamp01((t - 200 - s.wd) / 600)); /* step 3: warp in */
+      if (wp <= 0) continue;
+      var x = s.ex + (s.fx - s.ex) * wp;
+      var y = s.ey + (s.fy - s.ey) * wp;
+      var tw = reduced ? 1 : (0.7 + 0.3 * Math.sin((now / s.p) * Math.PI * 2 + s.ph));
+      ctx.globalAlpha = s.a * tw * wp;
+      ctx.fillStyle = 'rgb(' + s.c + ')';
+      ctx.beginPath();
+      ctx.arc(x, y, s.r * wp, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function paintShoots(now, t, w, h){
+    if (reduced) return;
+    if (t > 1500 && now >= nextShoot){
+      var dir = Math.random() < 0.5 ? 1 : -1;
+      var ang = (25 + Math.random() * 20) * Math.PI / 180;
+      shoots.push({
+        x: Math.random() * w, y: Math.random() * h * 0.5,
+        ca: Math.cos(ang) * dir, sa: Math.sin(ang),
+        len: 80 + Math.random() * 40,
+        travel: 240 + Math.random() * 120,
+        start: now
+      });
+      nextShoot = now + 4000 + Math.random() * 3000; /* every 4 to 7 seconds */
+    }
+    for (var i = shoots.length - 1; i >= 0; i--){
+      var s = shoots[i];
+      var p = (now - s.start) / 600;
+      if (p >= 1){ shoots.splice(i, 1); continue; }
+      var hx = s.x + s.ca * s.travel * p;
+      var hy = s.y + s.sa * s.travel * p;
+      var tx = hx - s.ca * s.len;
+      var ty = hy - s.sa * s.len;
+      var g = ctx.createLinearGradient(hx, hy, tx, ty);
+      g.addColorStop(0, 'rgba(255,255,255,' + (0.9 * (1 - p)) + ')');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(hx, hy);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+    }
+  }
+
+  function frame(now){
+    if (!openT) openT = now;
+    var t = now - openT;
+    var w = overlay.clientWidth, h = overlay.clientHeight;
+    ctx.fillStyle = '#0F0F0D';
+    ctx.fillRect(0, 0, w, h);
+    paintNebula(t, w, h);
+    paintStars(t, now);
+    paintShoots(now, t, w, h);
+    if (overlay.classList.contains('open') && !reduced){
+      rafId = requestAnimationFrame(frame);
+    }
+  }
 
   /* ---------- open / close ---------- */
-  var overlay = document.getElementById('garden-overlay');
   var closeBtn = document.getElementById('garden-close');
 
   function openMap(){
     overlay.classList.add('open');
-    if (!reduced){
-      requestAnimationFrame(function(){ gmLive.style.strokeDashoffset = 0; });
+    sizeCanvas();
+    openT = 0;
+    shoots = [];
+    nextShoot = performance.now() + 4000 + Math.random() * 3000;
+    if (reduced){
+      /* one static painting of the galaxy */
+      openT = performance.now() - 99999;
+      frame(performance.now());
+      glow.style.strokeDasharray = 'none';
+      coreglow.style.strokeDasharray = 'none';
+      glow.style.strokeDashoffset = '0';
+      coreglow.style.strokeDashoffset = '0';
+    } else {
+      /* step 4: spiral path draws itself in (800ms, from 500ms) */
+      [glow, coreglow].forEach(function(p){
+        p.style.transition = 'none';
+        p.style.strokeDasharray = pathLen;
+        p.style.strokeDashoffset = pathLen;
+      });
+      void map.getBoundingClientRect(); /* reflow */
+      [glow, coreglow].forEach(function(p){
+        p.style.transition = 'stroke-dashoffset .8s ease-out .5s';
+        p.style.strokeDashoffset = '0';
+      });
+      rafId = requestAnimationFrame(frame);
     }
     closeBtn.focus();
   }
   function closeMap(){
     overlay.classList.remove('open');
-    if (!reduced) gmLive.style.strokeDashoffset = len;
+    if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
+    if (!reduced){
+      [glow, coreglow].forEach(function(p){
+        p.style.transition = 'none';
+        p.style.strokeDashoffset = pathLen;
+      });
+    }
     trigger.focus();
   }
 
   trigger.addEventListener('click', openMap);
   closeBtn.addEventListener('click', closeMap);
   overlay.addEventListener('click', function(e){
-    if (e.target === overlay) closeMap();
+    if (e.target === overlay || e.target === canvas || e.target === map) closeMap();
   });
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape' && overlay.classList.contains('open')) closeMap();
@@ -502,8 +690,22 @@ function navigateTo(url){
         document.activeElement && document.activeElement.classList &&
         document.activeElement.classList.contains('gm-node')){
       e.preventDefault();
+      burst(document.activeElement, true);
       navigateTo(document.activeElement.getAttribute('data-url'));
     }
+  });
+
+  /* hover supernova + click supernova at maximum intensity */
+  Array.prototype.forEach.call(map.querySelectorAll('.gm-node'), function(node){
+    node.addEventListener('mouseenter', function(){ burst(node, false); });
+    node.addEventListener('click', function(){ burst(node, true); });
+  });
+
+  var grt = null;
+  window.addEventListener('resize', function(){
+    if (!overlay.classList.contains('open')) return;
+    clearTimeout(grt);
+    grt = setTimeout(function(){ sizeCanvas(); if (reduced) frame(performance.now()); }, 150);
   });
 })();
 </script>
