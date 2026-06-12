@@ -139,9 +139,15 @@
 
   /* ================= STATS ================= */
   #stats{min-height:60vh;padding-top:6vh;padding-bottom:6vh;}
+  .stats-row{
+    width:min(1080px,100%);
+    display:flex;
+    align-items:flex-start;
+    gap:6%;
+  }
   .stats-wrap{
     position:relative;
-    width:min(760px,100%);
+    width:58%;
     display:flex;
     gap:clamp(48px,12vw,160px);
   }
@@ -171,6 +177,55 @@
     letter-spacing:3px;color:var(--dim);text-transform:uppercase;
   }
   #ornament-stats{width:48px;height:48px;}
+
+  /* stack & status table */
+  .stack-table{
+    width:36%;
+    background:#181814;
+    padding:8px 18px 10px;
+  }
+  .stack-table table{width:100%;border-collapse:collapse;}
+  .stack-table th{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);text-transform:uppercase;
+    text-align:left;padding:14px 10px;
+    border-bottom:1px solid rgba(201,168,76,.1);
+  }
+  .stack-table td{
+    font-size:14px;color:var(--ink);
+    padding:12px 10px;
+    border-bottom:1px solid rgba(201,168,76,.1);
+  }
+  .stack-table tbody tr:last-child td{border-bottom:none;}
+  .stack-table th:first-child,
+  .stack-table td:first-child{border-left:2px solid transparent;padding-left:12px;}
+  .stack-table td:first-child{transition:border-color 150ms ease;}
+  .stack-table tbody tr{transition:background 150ms ease;}
+  .stack-table tbody tr:hover{background:#1E1E18;}
+  .stack-table tbody tr:hover td:first-child{border-left-color:var(--gold);}
+  .pill{
+    display:inline-block;
+    font-size:10px;font-weight:500;letter-spacing:2px;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border:1px solid var(--gold);
+  }
+  .pill-active{background:var(--gold);color:var(--bg);}
+  .pill-prof{background:transparent;color:var(--gold);border-color:rgba(201,168,76,.5);}
+
+  /* table scroll entrance: fade + rise, rows stagger 60ms (inline delays) */
+  html.js #stats .trv{
+    opacity:0;
+    transform:translateY(20px);
+    transition:opacity .6s ease-out,transform .6s ease-out;
+  }
+  html.js #stats.in .trv{opacity:1;transform:translateY(0);}
+
+  @media (max-width:900px){
+    .stats-row{flex-direction:column;gap:56px;}
+    .stats-wrap,.stack-table{width:100%;}
+  }
 
   /* ================= WORK ================= */
   #work .inner{width:min(720px,100%);}
@@ -299,6 +354,7 @@
     }
     html.js .rv{opacity:1;transform:none;transition:none;}
     #stats-connectors path{stroke-dashoffset:0 !important;transition:none !important;}
+    html.js #stats .trv{opacity:1;transform:none;transition:none;}
     .stat .suf{transition:none;}
     .card:hover::after{animation:none;clip-path:none;}
   }
@@ -341,35 +397,53 @@
 
   <!-- STATS -->
   <section id="stats" data-align="center">
-    <div class="stats-wrap">
-      <svg id="stats-connectors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
-      <div class="scol scol-1">
-        <div class="stat rv" id="s-followers" data-target="5786">
-          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
-          <p class="slabel">LinkedIn Followers</p>
+    <div class="stats-row">
+      <div class="stats-wrap">
+        <svg id="stats-connectors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="scol scol-1">
+          <div class="stat rv" id="s-fields" data-target="114">
+            <p class="numline"><span class="num">0</span><span class="suf">+</span></p>
+            <p class="slabel">Data Fields Documented</p>
+          </div>
+          <div class="stat rv" id="s-ramp" data-target="67">
+            <p class="numline"><span class="num">0</span><span class="suf">%</span></p>
+            <p class="slabel">Collaborator Ramp-Up Reduced</p>
+          </div>
+          <div class="stat rv" id="s-programs" data-target="2">
+            <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+            <p class="slabel">Programs Simultaneously</p>
+          </div>
         </div>
-        <div class="stat rv" id="s-members" data-target="50">
-          <p class="numline"><span class="num">0</span><span class="suf">+</span></p>
-          <p class="slabel">BSCS Members</p>
-        </div>
-        <div class="stat rv" id="s-nexgen" data-target="9">
-          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
-          <p class="slabel">NEX-GEN Posts Published</p>
+        <div class="scol scol-2">
+          <div class="stat rv" id="s-systems" data-target="5">
+            <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+            <p class="slabel">Enterprise Systems Mapped</p>
+          </div>
+          <div class="stat rv" id="s-blueprint" data-target="41">
+            <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+            <p class="slabel">Page Organizational Blueprint</p>
+          </div>
+          <div class="stat rv" id="s-nexgen" data-target="9">
+            <p class="numline"><span class="num">0</span><span class="suf"></span></p>
+            <p class="slabel">NEX-GEN Posts Published</p>
+          </div>
         </div>
       </div>
-      <div class="scol scol-2">
-        <div class="stat rv" id="s-views" data-target="1000">
-          <p class="numline"><span class="num">0</span><span class="suf">+</span></p>
-          <p class="slabel">Weekly Post Views</p>
-        </div>
-        <div class="stat rv" id="s-crm" data-target="4">
-          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
-          <p class="slabel">CRM Systems Mapped</p>
-        </div>
-        <div class="stat rv" id="s-blueprint" data-target="41">
-          <p class="numline"><span class="num">0</span><span class="suf"></span></p>
-          <p class="slabel">Page Organizational Blueprint</p>
-        </div>
+
+      <div class="stack-table" aria-label="Stack and status">
+        <table>
+          <thead>
+            <tr class="trv" style="transition-delay:0ms"><th>Tool</th><th>Category</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr class="trv" style="transition-delay:60ms"><td>Salesforce</td><td>CRM</td><td><span class="pill pill-active">Active</span></td></tr>
+            <tr class="trv" style="transition-delay:120ms"><td>Raiser's Edge</td><td>CRM</td><td><span class="pill pill-active">Active</span></td></tr>
+            <tr class="trv" style="transition-delay:180ms"><td>Python</td><td>Technical</td><td><span class="pill pill-prof">Proficient</span></td></tr>
+            <tr class="trv" style="transition-delay:240ms"><td>Oracle SQL</td><td>Technical</td><td><span class="pill pill-prof">Proficient</span></td></tr>
+            <tr class="trv" style="transition-delay:300ms"><td>Power Query</td><td>Data</td><td><span class="pill pill-active">Active</span></td></tr>
+            <tr class="trv" style="transition-delay:360ms"><td>draw.io</td><td>Process</td><td><span class="pill pill-prof">Proficient</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -425,7 +499,7 @@
   <!-- CONTACT -->
   <section id="contact" data-align="center">
     <h2 class="rv">LET'S WORK TOGETHER.</h2>
-    <a class="email rv" href="mailto:">essienedima74@gmail.com</a>
+    <a class="email rv" href="mailto:">edima.essien@[domain]</a>
   </section>
 
 </main>
@@ -687,7 +761,7 @@
     svg.setAttribute('width', c.width);
     svg.setAttribute('height', c.height);
     svg.setAttribute('viewBox', '0 0 ' + c.width + ' ' + c.height);
-    var pairs = [['s-followers','s-views'], ['s-members','s-blueprint']];
+    var pairs = [['s-fields','s-systems'], ['s-ramp','s-nexgen']];
     var out = '';
     pairs.forEach(function(pair){
       var a = document.getElementById(pair[0]).querySelector('.num').getBoundingClientRect();
