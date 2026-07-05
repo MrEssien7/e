@@ -1,0 +1,26 @@
+<!-- ============================================================
+     GARDEN MAP NAVIGATION : shared component (canonical source)
+
+     HOW IT WORKS NOW (one copy, site-wide):
+     1. All behavior lives in garden-map.js. Never paste JS per page.
+     2. Each page carries only the markup block below, just before
+        </body>, followed by <script src="garden-map.js"></script>.
+     3. To change nav behavior, edit garden-map.js once.
+     4. Requires style.css to be linked in <head>.
+
+     This file is documentation + the copy-paste source for the
+     markup block when adding a new page.
+     ============================================================ -->
+<button id="garden-trigger" aria-label="Open the garden map" aria-haspopup="dialog"></button>
+
+<div id="garden-overlay" class="gm-overlay" role="dialog" aria-modal="true" aria-label="Garden map navigation" aria-hidden="true" inert>
+  <canvas id="gm-canvas" aria-hidden="true"></canvas>
+  <p class="gm-title">The Garden Map</p>
+  <button id="garden-close" aria-label="Close the garden map">&times;</button>
+  <svg id="garden-map" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<script src="garden-map.js"></script>
+<!-- ============================================================
+     END GARDEN MAP NAVIGATION
+     ============================================================ -->

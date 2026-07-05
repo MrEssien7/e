@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z8L5N1QT7N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Z8L5N1QT7N');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>University &mdash; Edima Essien</title>
+<meta name="description" content="Academic record. Edima Essien.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230F0F0D'/%3E%3Cg fill='none' stroke='%23C9A84C' stroke-width='2.5'%3E%3Cpath d='M10 46 A22 22 0 0 1 54 46 Z'/%3E%3Cpath d='M32 46 L32 24 M32 46 L16.4 30.4 M32 46 L47.6 30.4'/%3E%3C/g%3E%3C/svg%3E">
+<meta name="theme-color" content="#0F0F0D">
+<link rel="canonical" href="https://mressien7.github.io/e/university.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Edima Essien">
+<meta property="og:title" content="University &mdash; Edima Essien">
+<meta property="og:description" content="Academic record. Edima Essien.">
+<meta property="og:url" content="https://mressien7.github.io/e/university.html">
+<meta property="og:image" content="https://mressien7.github.io/e/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="University &mdash; Edima Essien">
+<meta name="twitter:description" content="Academic record. Edima Essien.">
+<meta name="twitter:image" content="https://mressien7.github.io/e/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  .page-label{font-size:10px;font-weight:500;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin:0 0 18px;}
+  .sec-title{font-size:10px;font-weight:500;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin:0 0 28px;}
+  main{padding:0 8vw 0 14vw;}
+  header.page-head{padding-top:18vh;padding-bottom:5vh;}
+  .page-head h1{font-size:clamp(30px,4.5vw,40px);font-weight:400;letter-spacing:-.5px;margin:0;}
+
+  /* live GPA */
+  .gpa-block{padding:2vh 0 6vh;}
+  .gpa-num{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:80px;line-height:1;color:var(--gold);margin:0;
+  }
+  .gpa-class{
+    font-size:10px;font-weight:500;letter-spacing:4px;
+    color:var(--dim);text-transform:uppercase;margin:14px 0 0;
+  }
+
+  /* grade trajectory chart */
+  .chart-block{max-width:980px;margin:0 0 6vh;}
+  .chart-block .ctitle{
+    font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);text-transform:uppercase;margin:0 0 6px;
+  }
+  .chart-block .csub{
+    font-size:13px;color:var(--dim);margin:0 0 22px;
+  }
+  .chart-shell{
+    background:var(--card);
+    border:1px solid rgba(201,168,76,.15);
+    padding:26px 22px 18px;
+  }
+  #trajectory{display:block;width:100%;height:auto;}
+  #trajectory .grid-line{stroke:rgba(201,168,76,.10);stroke-width:1;}
+  #trajectory .band{fill:rgba(201,168,76,.04);}
+  #trajectory .axis-label{
+    font-family:'Space Grotesk',sans-serif;font-size:10px;
+    letter-spacing:1px;fill:var(--dim);
+  }
+  #trajectory .traj-line{
+    fill:none;stroke:var(--gold);stroke-width:1.5;
+    stroke-linejoin:round;stroke-linecap:round;
+  }
+  #trajectory .pt{fill:var(--bg);stroke:var(--gold);stroke-width:1.5;cursor:pointer;}
+  #trajectory .pt:hover{fill:var(--gold);}
+  #trajectory .pt-hi{fill:var(--gold);stroke:var(--gold);}
+  #trajectory .avg-line{stroke:var(--gold);stroke-width:1;stroke-dasharray:4 4;opacity:.5;}
+  #trajectory .avg-label{
+    font-family:'Space Grotesk',sans-serif;font-size:10px;
+    letter-spacing:1px;fill:var(--gold);opacity:.8;
+  }
+  .chart-tip{
+    position:absolute;pointer-events:none;opacity:0;
+    transform:translate(-50%,-120%);
+    background:var(--bg);border:1px solid var(--gold);
+    padding:7px 10px;z-index:5;
+    transition:opacity 120ms ease;white-space:nowrap;
+  }
+  .chart-tip .tip-code{
+    font-family:'Space Grotesk',sans-serif;font-size:10px;
+    letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:block;
+  }
+  .chart-tip .tip-name{
+    font-family:'Space Grotesk',sans-serif;font-size:12px;
+    color:var(--ink);display:block;margin-top:2px;
+  }
+  .chart-tip .tip-grade{
+    font-family:'Fraunces',serif;font-size:18px;
+    color:var(--gold);display:block;margin-top:4px;
+  }
+
+  /* table */
+  .tablewrap{max-width:980px;overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;min-width:740px;}
+  thead th{
+    font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);text-transform:uppercase;
+    text-align:left;padding:12px 14px;
+    border-bottom:1px solid rgba(201,168,76,.25);
+    font-family:'Space Grotesk',sans-serif;
+  }
+  tbody tr:nth-child(odd){background:var(--card);}
+  tbody tr:nth-child(even){background:var(--bg);}
+  tbody td{padding:10px 14px;font-size:14px;}
+  tbody td:first-child{border-left:1px solid transparent;}
+  tbody tr:hover td:first-child{border-left-color:var(--gold);}
+  .cell-auto{color:var(--ink);}
+  td.cell-code,td.cell-name{color:var(--gold);}
+  td.cell-credits,td.cell-grade{text-align:center;}
+  .status-pill{
+    display:inline-block;
+    border-bottom:1px solid rgba(201,168,76,.3);
+    color:var(--dim);font-family:'Space Grotesk',sans-serif;
+    font-size:10px;letter-spacing:2px;text-transform:uppercase;
+    padding:4px 2px;
+  }
+
+  /* projection panel */
+  .proj{
+    max-width:980px;margin-top:7vh;
+    background:var(--card);
+    border:1px solid rgba(201,168,76,.15);
+    padding:30px;
+  }
+  .proj .ptitle{
+    font-size:10px;font-weight:500;letter-spacing:3px;
+    color:var(--gold);text-transform:uppercase;margin:0 0 24px;
+  }
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;align-items:start;}
+  .proj .big{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:40px;line-height:1;color:var(--gold);margin:6px 0 0;
+  }
+  .proj .k{font-size:10px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;display:block;}
+  .proj .slider-line{font-size:13px;color:var(--ink);margin:8px 0 12px;}
+  input[type=range]{
+    width:100%;accent-color:var(--gold);background:transparent;
+  }
+  .proj .credits-line{font-size:14px;color:var(--ink);margin:6px 0 0;display:flex;align-items:baseline;gap:6px;}
+  .proj .credits-line input{
+    background:transparent;border:0;border-bottom:1px solid rgba(201,168,76,.3);
+    color:var(--gold);font-family:'Space Grotesk',sans-serif;font-size:14px;
+    width:48px;text-align:center;padding:2px;
+  }
+  .proj .credits-line input:focus{outline:none;border-bottom-color:var(--gold);}
+
+  html.js .rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease-out,transform .7s ease-out;}
+  html.js .in .rv{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){
+    html.js .rv{opacity:1;transform:none;transition:none;}
+  }
+  @media (max-width:767px){
+    #live-spine{stroke-width:1px;}
+    main{padding:0 6vw 0 16vw;}
+    .gpa-num{font-size:56px;}
+  }
+</style>
+</head>
+<body>
+<svg id="spine" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:0;overflow:visible" aria-hidden="true">
+  <path id="ghost-spine" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.06" d=""/>
+  <path id="live-spine" fill="none" stroke="#C9A84C" stroke-width="1.5" d=""/>
+</svg>
+<main id="page-content" style="position:relative;z-index:1">
+
+  <header class="page-head in" data-reveal>
+    <p class="page-label rv">University</p>
+    <h1 class="rv">Academic record.</h1>
+  </header>
+
+  <div class="gpa-block in" data-reveal>
+    <p class="gpa-num rv" id="gpa-live">&mdash;</p>
+    <p class="gpa-class rv" id="gpa-class">Grades not yet recorded</p>
+  </div>
+
+  <div class="chart-block in" data-reveal style="position:relative">
+    <p class="ctitle rv">Grade trajectory</p>
+    <p class="csub rv">Completed courses, in order taken</p>
+    <div class="chart-shell rv">
+      <svg id="trajectory" viewBox="0 0 960 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line chart of grades across completed courses in chronological order"></svg>
+    </div>
+    <div class="chart-tip" id="chart-tip" aria-hidden="true">
+      <span class="tip-code"></span><span class="tip-name"></span><span class="tip-grade"></span>
+    </div>
+  </div>
+
+  <div class="tablewrap" data-reveal>
+    <table id="courses">
+      <thead>
+        <tr>
+          <th>Code</th><th>Course Name</th><th>Credits</th><th>Grade %</th><th>Letter</th><th>GPA Points</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="course-body"></tbody>
+    </table>
+  </div>
+
+  <div class="proj" data-reveal>
+    <p class="ptitle rv">Projection</p>
+    <div class="proj-grid">
+      <div class="rv">
+        <span class="k">Current GPA</span>
+        <p class="big" id="proj-current">&mdash;</p>
+      </div>
+      <div class="rv">
+        <span class="k">Target</span>
+        <p class="slider-line">If I score <span id="target-pct" style="color:var(--gold)">85</span>% in remaining courses...</p>
+        <input type="range" id="target-slider" min="60" max="100" value="85" aria-label="Target percentage for remaining courses">
+      </div>
+      <div class="rv">
+        <span class="k">Projected GPA</span>
+        <p class="big" id="proj-out">&mdash;</p>
+      </div>
+      <div class="rv">
+        <span class="k">Credits</span>
+        <p class="credits-line"><span id="credits-done">0</span> / <input type="number" id="credits-total" value="120" aria-label="Total program credits"> completed</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+<footer style="position:relative;z-index:1;text-align:center;padding:12vh 6vw 60px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Edima Essien &middot; Windsor, Ontario &middot; Built by hand &middot; No rounded corners</footer>
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- left-edge spine ---------- */
+  var spine = document.getElementById('spine');
+  var ghost = document.getElementById('ghost-spine');
+  var live  = document.getElementById('live-spine');
+  var total = 0;
+  function progress(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max <= 0) return 1;
+    return Math.min(1, Math.max(0, window.scrollY / max));
+  }
+  function buildSpine(){
+    spine.setAttribute('height', 0);
+    var h = document.documentElement.scrollHeight;
+    var w = window.innerWidth;
+    var x0 = w * 0.06;
+    var amp = Math.max(8, w * 0.015);
+    var segs = Math.max(3, Math.round(h / 700));
+    var d = 'M ' + x0 + ' 0';
+    var prevX = x0;
+    for (var i = 1; i <= segs; i++){
+      var x = (i === segs) ? x0 : x0 + amp * (i % 2 === 1 ? 1 : -1);
+      var y2 = h * i / segs;
+      var ym = h * (i - 0.5) / segs;
+      d += ' C ' + prevX + ' ' + ym + ', ' + x + ' ' + ym + ', ' + x + ' ' + y2;
+      prevX = x;
+    }
+    ghost.setAttribute('d', d);
+    live.setAttribute('d', d);
+    spine.setAttribute('height', h);
+    total = live.getTotalLength();
+    live.style.strokeDasharray = total;
+    live.style.strokeDashoffset = reduced ? 0 : total * (1 - progress());
+  }
+  window.addEventListener('scroll', function(){
+    if (reduced || !total) return;
+    live.style.strokeDashoffset = total * (1 - progress());
+  }, { passive: true });
+  var rt = null;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(buildSpine, 160); });
+  window.addEventListener('load', buildSpine);
+  if (document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ setTimeout(buildSpine, 50); }); }
+
+  /* ---------- scroll entrance ---------- */
+  var revealTargets = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  revealTargets.forEach(function(t){
+    Array.prototype.forEach.call(t.querySelectorAll('.rv'), function(el, i){
+      el.style.transitionDelay = (i * 90) + 'ms';
+    });
+  });
+  if (reduced || !('IntersectionObserver' in window)){
+    revealTargets.forEach(function(t){ t.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    revealTargets.forEach(function(t){ io.observe(t); });
+  }
+
+
+  /* ---------- grade scale (standard Canadian) ---------- */
+  function scale(pct){
+    if (pct >= 90) return { letter:'A+', pts:4.0 };
+    if (pct >= 85) return { letter:'A',  pts:4.0 };
+    if (pct >= 80) return { letter:'A-', pts:3.7 };
+    if (pct >= 77) return { letter:'B+', pts:3.3 };
+    if (pct >= 73) return { letter:'B',  pts:3.0 };
+    if (pct >= 70) return { letter:'B-', pts:2.7 };
+    if (pct >= 67) return { letter:'C+', pts:2.3 };
+    if (pct >= 63) return { letter:'C',  pts:2.0 };
+    if (pct >= 60) return { letter:'C-', pts:1.7 };
+    if (pct >= 57) return { letter:'D+', pts:1.3 };
+    if (pct >= 53) return { letter:'D',  pts:1.0 };
+    return { letter:'F', pts:0.0 };
+  }
+  // Adjust classification thresholds to UWindsor's actual cutoffs if needed
+  function classification(gpa){
+    if (gpa >= 3.7) return "DEAN'S LIST";
+    if (gpa >= 3.0) return 'HONOURS';
+    if (gpa > 0) return 'PASS';
+    return '&mdash;';
+  }
+
+  /* ---------- course rows ----------
+     This table is read-only on the live site. To update it, edit the
+     array below directly (grade is a number 0-100, or null if not
+     yet entered/graded). Letter grade, GPA points, your overall GPA,
+     and the projection panel all recalculate automatically from this
+     array on page load. */
+  var seed = [
+    { code:'MATH-1720', name:'Differential Calculus',            credits:3, grade:85,   status:'COMPLETE' },
+    { code:'STEN-1000', name:'Introduction to Business',         credits:3, grade:75,   status:'COMPLETE' },
+    { code:'MATH-1730', name:'Integral Calculus',                credits:3, grade:77,   status:'COMPLETE' },
+    { code:'COMP-1410', name:'Algorithms & Programming II',      credits:3, grade:67,   status:'COMPLETE' },
+    { code:'COMP-2650', name:'Computer Architecture I',          credits:3, grade:89,   status:'COMPLETE' },
+    { code:'ESCI-1000', name:'Natural Hazards and Disasters',    credits:3, grade:91,   status:'COMPLETE' },
+    { code:'COMP-2120', name:'Object-Oriented Programming',      credits:3, grade:66,   status:'COMPLETE' },
+    { code:'COMP-2540', name:'Data Structures & Algorithms',     credits:3, grade:71,   status:'COMPLETE' },
+    { code:'COMP-2560', name:'System Programming',               credits:3, grade:53,   status:'COMPLETE' },
+    { code:'MKTG-1310', name:'Principles of Marketing',          credits:3, grade:57,   status:'COMPLETE' },
+    { code:'STAT-2910', name:'Statistics for the Sciences',      credits:3, grade:89,   status:'COMPLETE' },
+    { code:'COMP-3150', name:'Database Management Systems',      credits:3, grade:82,   status:'COMPLETE' },
+    { code:'COMP-3300', name:'Operating Systems',                credits:3, grade:85,   status:'COMPLETE' },
+    { code:'ECON-1100', name:'Introduction to Economics I',      credits:3, grade:80,   status:'COMPLETE' },
+    { code:'ECON-1110', name:'Introduction to Economics II',     credits:3, grade:83,   status:'COMPLETE' },
+    { code:'MGMT-1000', name:'Business Communications',          credits:3, grade:81,   status:'COMPLETE' },
+    { code:'ACCT-1510', name:'Principles of Financial Accounting', credits:3, grade:null, status:'IN PROGRESS' },
+    { code:'STEN-2050', name:'Co-op Work Term I',                credits:3, grade:null, status:'IN PROGRESS' }
+  ];
+  var body = document.getElementById('course-body');
+
+  function rowHTML(c){
+    var sc = (c.grade != null) ? scale(c.grade) : null;
+    return '<td class="cell-code">' + (c.code || '\u2014') + '</td>' +
+      '<td class="cell-name">' + (c.name || '\u2014') + '</td>' +
+      '<td class="cell-credits">' + c.credits + '</td>' +
+      '<td class="cell-grade">' + (c.grade != null ? c.grade : '\u2014') + '</td>' +
+      '<td class="cell-auto">' + (sc ? sc.letter : '\u2014') + '</td>' +
+      '<td class="cell-auto">' + (sc ? sc.pts.toFixed(1) : '\u2014') + '</td>' +
+      '<td class="cell-status"><span class="status-pill">' + c.status + '</span></td>';
+  }
+  function addRow(c){
+    var tr = document.createElement('tr');
+    tr.innerHTML = rowHTML(c);
+    body.appendChild(tr);
+  }
+  seed.forEach(addRow);
+
+  /* ---------- grade trajectory chart ----------
+     Drawn from the same seed array. Plots every COMPLETE course with a
+     numeric grade, in array order (chronological). Redraws automatically
+     whenever you edit the seed grades. No data is duplicated here. */
+  (function drawTrajectory(){
+    var svg = document.getElementById('trajectory');
+    var tip = document.getElementById('chart-tip');
+    var tipCode = tip.querySelector('.tip-code');
+    var tipName = tip.querySelector('.tip-name');
+    var tipGrade = tip.querySelector('.tip-grade');
+    if (!svg) return;
+
+    var pts = seed.filter(function(c){ return c.grade != null && c.status === 'COMPLETE'; });
+    if (pts.length < 2) return;
+
+    var W = 960, H = 300;
+    var padL = 44, padR = 20, padT = 24, padB = 40;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var yMin = 50, yMax = 100;
+    function xAt(i){ return padL + (pts.length === 1 ? plotW/2 : plotW * i / (pts.length - 1)); }
+    function yAt(g){ return padT + plotH * (1 - (Math.max(yMin, Math.min(yMax, g)) - yMin) / (yMax - yMin)); }
+
+    var NS = 'http://www.w3.org/2000/svg';
+    function el(tag, attrs){
+      var n = document.createElementNS(NS, tag);
+      for (var k in attrs) n.setAttribute(k, attrs[k]);
+      return n;
+    }
+
+    var frag = document.createDocumentFragment();
+
+    /* horizontal gridlines + y labels at 60/70/80/90/100 */
+    [60,70,80,90,100].forEach(function(g){
+      var y = yAt(g);
+      frag.appendChild(el('line', { x1:padL, y1:y, x2:W-padR, y2:y, 'class':'grid-line' }));
+      frag.appendChild(el('text', { x:padL-10, y:y+3, 'text-anchor':'end', 'class':'axis-label' })).textContent = g;
+    });
+
+    /* average reference line */
+    var avg = pts.reduce(function(s,c){ return s + c.grade; }, 0) / pts.length;
+    var ay = yAt(avg);
+    frag.appendChild(el('line', { x1:padL, y1:ay, x2:W-padR, y2:ay, 'class':'avg-line' }));
+    var avgLab = el('text', { x:W-padR, y:ay-6, 'text-anchor':'end', 'class':'avg-label' });
+    avgLab.textContent = 'AVG ' + avg.toFixed(1);
+    frag.appendChild(avgLab);
+
+    /* the line path */
+    var d = '';
+    pts.forEach(function(c, i){ d += (i === 0 ? 'M ' : ' L ') + xAt(i).toFixed(1) + ' ' + yAt(c.grade).toFixed(1); });
+    var line = el('path', { d:d, 'class':'traj-line', pathLength:'100' });
+    frag.appendChild(line);
+
+    /* x-axis course-code labels (rotated-free: just the code, abbreviated) */
+    pts.forEach(function(c, i){
+      var t = el('text', { x:xAt(i), y:H-padB+20, 'text-anchor':'middle', 'class':'axis-label' });
+      t.textContent = c.code.split('-')[0] + c.code.split('-')[1].slice(0,1);
+      frag.appendChild(t);
+    });
+
+    /* data points */
+    pts.forEach(function(c, i){
+      var cx = xAt(i), cy = yAt(c.grade);
+      var pt = el('circle', { cx:cx, cy:cy, r:4, 'class':'pt' + (c.grade >= 85 ? ' pt-hi' : '') });
+      pt.addEventListener('mouseenter', function(){
+        tipCode.textContent = c.code;
+        tipName.textContent = c.name;
+        tipGrade.textContent = c.grade + '%';
+        var shell = svg.getBoundingClientRect();
+        var block = tip.offsetParent.getBoundingClientRect();
+        tip.style.left = (shell.left - block.left + (cx / W) * shell.width) + 'px';
+        tip.style.top = (shell.top - block.top + (cy / H) * shell.height) + 'px';
+        tip.style.opacity = '1';
+      });
+      pt.addEventListener('mouseleave', function(){ tip.style.opacity = '0'; });
+      frag.appendChild(pt);
+    });
+
+    svg.appendChild(frag);
+
+    /* draw-in animation on reveal */
+    if (!reduced){
+      var len = line.getTotalLength ? line.getTotalLength() : 0;
+      if (len){
+        line.style.strokeDasharray = len;
+        line.style.strokeDashoffset = len;
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if (e.isIntersecting){
+              line.style.transition = 'stroke-dashoffset 1.4s ease-out';
+              line.style.strokeDashoffset = '0';
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold:0.2 });
+        io.observe(svg);
+      }
+    }
+  })();
+
+  /* ---------- live recalculation ---------- */
+  var gpaLive = document.getElementById('gpa-live');
+  var gpaClass = document.getElementById('gpa-class');
+  var projCurrent = document.getElementById('proj-current');
+  var projOut = document.getElementById('proj-out');
+  var targetSlider = document.getElementById('target-slider');
+  var targetPct = document.getElementById('target-pct');
+  var creditsDone = document.getElementById('credits-done');
+
+  function recalc(){
+    var donePts = 0, doneCr = 0, remCr = 0;
+    seed.forEach(function(c){
+      var credits = c.credits || 0;
+      if (c.grade != null && c.status === 'COMPLETE'){
+        var sc = scale(c.grade);
+        donePts += sc.pts * credits;
+        doneCr += credits;
+      }
+      if (c.status !== 'COMPLETE') remCr += credits;
+    });
+
+    var current = doneCr > 0 ? donePts / doneCr : 0;
+    gpaLive.textContent = doneCr > 0 ? current.toFixed(2) : '\u2014';
+    gpaClass.innerHTML = doneCr > 0 ? classification(current) : 'Grades not yet recorded';
+    projCurrent.textContent = doneCr > 0 ? current.toFixed(2) : '\u2014';
+
+    var t = parseFloat(targetSlider.value);
+    targetPct.textContent = t;
+    var tp = scale(t).pts;
+    var projDen = doneCr + remCr;
+    projOut.textContent = projDen > 0 ? ((donePts + tp * remCr) / projDen).toFixed(2) : '\u2014';
+
+    creditsDone.textContent = doneCr;
+  }
+
+  targetSlider.addEventListener('input', recalc);
+  document.getElementById('credits-total').addEventListener('input', recalc);
+  recalc();
+
+  buildSpine();
+})();
+</script>
+
+<!-- ============================================================
+     GARDEN MAP NAVIGATION : shared component
+     Markup here; behavior lives in garden-map.js (one copy, site-wide).
+     Requires style.css to be linked in <head>.
+     ============================================================ -->
+<button id="garden-trigger" aria-label="Open the garden map" aria-haspopup="dialog"></button>
+
+<div id="garden-overlay" class="gm-overlay" role="dialog" aria-modal="true" aria-label="Garden map navigation" aria-hidden="true" inert>
+  <canvas id="gm-canvas" aria-hidden="true"></canvas>
+  <p class="gm-title">The Garden Map</p>
+  <button id="garden-close" aria-label="Close the garden map">&times;</button>
+  <svg id="garden-map" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<script src="garden-map.js"></script>
+<!-- ============================================================
+     END GARDEN MAP NAVIGATION
+     ============================================================ -->
+
+</body>
+</html>

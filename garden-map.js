@@ -1,0 +1,462 @@
+/* ============================================================
+   THE GARDEN MAP — shared navigation (single source of truth)
+   Loaded by every page via <script src="garden-map.js">.
+   Requires style.css and the garden markup block in the page.
+   ============================================================ */
+/* ---------- page transitions (global) ---------- */
+function navigateTo(url){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced){ window.location.href = url; return; }
+  document.body.style.transition = 'opacity 400ms ease';
+  document.body.style.opacity = 0;
+  setTimeout(function(){ window.location.href = url; }, 400);
+}
+
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
+
+  /* ---------- fade in on load ---------- */
+  if (!reduced){
+    document.body.style.opacity = '0';
+    requestAnimationFrame(function(){
+      document.body.style.transition = 'opacity 400ms ease';
+      requestAnimationFrame(function(){ document.body.style.opacity = '1'; });
+    });
+  }
+
+  /* ---------- the six destinations ---------- */
+  var PAGES = [
+    { key:'home',       label:'HOME',       url:'index.html',      swing: 0    },
+    { key:'portfolio',  label:'PORTFOLIO',  url:'portfolio.html',  swing:-1    },
+    { key:'resume',     label:'R\u00C9SUM\u00C9', url:'resume.html', swing: 1   },
+    { key:'dashboard',  label:'DASHBOARD',  url:'dashboard.html',  swing:-0.7  },
+    { key:'university', label:'UNIVERSITY', url:'university.html', swing: 0.7  },
+    { key:'calendar',   label:'CALENDAR',   url:'calendar.html',   swing: 0    }
+  ];
+
+  /* ---------- ornament geometry ----------
+     every element: class="dr", pathLength="100", and explicit fill="none".
+     stroke only; nothing in the map ever fills. */
+  function E(tag, a){
+    var s = '<' + tag + ' class="dr" pathLength="100" fill="none"';
+    for (var k in a) s += ' ' + k + '="' + a[k] + '"';
+    return s + '/>';
+  }
+  function ornHome(){
+    var s = E('path',{d:'M -36 18 A 36 36 0 0 1 36 18 L -36 18 Z'});
+    for (var i = 0; i <= 8; i++){
+      var a = i * 22.5 * Math.PI / 180;
+      s += E('path',{d:'M 0 18 L ' + (36*Math.cos(a)).toFixed(2) + ' ' + (18 - 36*Math.sin(a)).toFixed(2)});
+    }
+    var curl = 'M 0 -20 C 1.5 -25, 5 -28.5, 8 -27 C 10.5 -25.8, 10 -22.5, 7.5 -22.6 C 5.8 -22.7, 5.6 -24.6, 7 -25.4';
+    [11.25,56.25,101.25,146.25].forEach(function(t){
+      s += E('path',{d:curl, transform:'translate(0,18) rotate(' + (90 - t).toFixed(2) + ')'});
+    });
+    return { span:88, inner:s };
+  }
+  function ornPortfolio(){
+    var s = E('rect',{x:-26,y:-26,width:52,height:52});
+    s += E('rect',{x:-26,y:-26,width:52,height:52,transform:'rotate(45)'});
+    for (var i = 0; i < 8; i++){
+      s += '<g transform="rotate(' + (i*45) + ')">'
+         + E('circle',{cx:0,cy:-40,r:2})
+         + E('path',{d:'M 0 -43 C 1.5 -45.5, 1 -48, -0.8 -49.5'})
+         + '</g>';
+    }
+    return { span:104, inner:s };
+  }
+  function ornResume(){
+    var s = E('circle',{r:34});
+    s += E('path',{d:'M -19 -19 L 19 19'}) + E('path',{d:'M -19 19 L 19 -19'});
+    [0,90,180,270].forEach(function(r){
+      s += '<g transform="rotate(' + r + ')">'
+         + E('path',{d:'M -5 -33.6 C -4.5 -40, -2.5 -44.5, 0 -48'})
+         + E('path',{d:'M 5 -33.6 C 4.5 -40, 2.5 -44.5, 0 -48'})
+         + '</g>';
+    });
+    return { span:104, inner:s };
+  }
+  function ornDashboard(){
+    var s = E('path',{d:'M -28 14 L 28 14'});
+    s += E('path',{d:'M -28 14 A 28 28 0 0 1 28 14'});
+    [0,45,90,135,180].forEach(function(a){
+      s += E('path',{d:'M 0 -28 L 0 -23', transform:'translate(0,14) rotate(' + (a - 90) + ')'});
+    });
+    s += E('path',{d:'M 0 0 L 0 -24', transform:'translate(0,14) rotate(-50)'});
+    s += E('circle',{cx:0,cy:14,r:2.5});
+    return { span:72, inner:s };
+  }
+  function ornUniversity(){
+    var s = E('rect',{x:-23,y:-10,width:4,height:40});
+    s += E('rect',{x:19,y:-10,width:4,height:40});
+    s += E('path',{d:'M -27 -10 L 27 -10'});
+    s += E('path',{d:'M -21 -10 A 21 21 0 0 1 21 -10'});
+    s += E('path',{d:'M -4 -33 L 4 -33 L 2.4 -25.5 L -2.4 -25.5 Z'});
+    return { span:70, inner:s };
+  }
+  function ornCalendar(){
+    var s = E('circle',{r:32});
+    for (var i = 0; i < 12; i++){
+      s += E('path',{d:'M 0 -32 L 0 ' + (i % 3 === 0 ? -24 : -28), transform:'rotate(' + (i*30) + ')'});
+    }
+    s += E('path',{d:'M 0 0 L 0 -32', transform:'rotate(300)'});
+    return { span:70, inner:s };
+  }
+  var ORN = {
+    home: ornHome, portfolio: ornPortfolio, resume: ornResume,
+    dashboard: ornDashboard, university: ornUniversity, calendar: ornCalendar
+  };
+
+  /* ---------- detect current page ---------- */
+  var file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  var current = 'home';
+  PAGES.forEach(function(p){ if (p.url === file) current = p.key; });
+
+  /* ---------- trigger: ringed, pulsing star system ---------- */
+  var trigger = document.getElementById('garden-trigger');
+  var trigPulseLayer = null;
+  (function(){
+    var o = ORN[current]();
+    var h = o.span / 2;
+    trigger.innerHTML =
+      '<span class="gm-trig-halo" aria-hidden="true">' +
+        '<svg viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">' +
+          '<g class="gm-ring-spin"><g class="gm-ring-spin2">' +
+            '<ellipse class="gm-ring" cx="72" cy="72" rx="45" ry="14" fill="none" transform="rotate(25 72 72)"/>' +
+          '</g></g>' +
+          '<g class="gm-pulse-layer"></g>' +
+        '</svg>' +
+      '</span>' +
+      '<span class="gm-trig-orn">' +
+        '<svg viewBox="' + (-h) + ' ' + (-h) + ' ' + o.span + ' ' + o.span + '" xmlns="http://www.w3.org/2000/svg">' +
+        '<g fill="none" stroke="#C9A84C" stroke-width="2">' + o.inner + '</g></svg>' +
+      '</span>';
+    Array.prototype.forEach.call(trigger.querySelectorAll('.gm-trig-orn .dr'), function(el){
+      el.style.strokeDasharray = 'none';
+      el.style.strokeDashoffset = '0';
+    });
+    trigPulseLayer = trigger.querySelector('.gm-pulse-layer');
+  })();
+
+  /* supernova pulse: r 34 expanding to 70, opacity .6 to 0 over 800ms */
+  function trigPulse(){
+    if (reduced || !trigPulseLayer) return;
+    var c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', 72); c.setAttribute('cy', 72); c.setAttribute('r', 70);
+    c.setAttribute('fill', 'none');
+    c.style.animation = 'gmTrigPulse 800ms ease-out forwards';
+    trigPulseLayer.appendChild(c);
+    setTimeout(function(){ if (c.parentNode) c.parentNode.removeChild(c); }, 950);
+  }
+  if (!reduced){
+    /* fires 1.5s after load, then every 4.5s */
+    setTimeout(function(){
+      trigPulse();
+      setInterval(trigPulse, 4500);
+    }, 1500);
+    trigger.addEventListener('mouseenter', trigPulse);
+  }
+
+  /* ---------- the map: spine logic between six nodes ---------- */
+  var map = document.getElementById('garden-map');
+  var CX = 300, AMP = 150, Y0 = 90, STEP = 124, NODE = 64;
+
+  var nodesXY = PAGES.map(function(p, i){
+    return { x: CX + AMP * p.swing, y: Y0 + i * STEP };
+  });
+  var d = 'M ' + nodesXY[0].x + ' ' + nodesXY[0].y;
+  for (var i = 1; i < nodesXY.length; i++){
+    var a = nodesXY[i-1], b = nodesXY[i];
+    var ym = (a.y + b.y) / 2;
+    d += ' C ' + a.x + ' ' + ym + ', ' + b.x + ' ' + ym + ', ' + b.x + ' ' + b.y;
+  }
+
+  /* the spiral path: three layered strokes on the same d, all fill="none" */
+  var svgStr =
+    '<path class="gm-glow" fill="none" d="' + d + '"/>' +
+    '<path class="gm-coreglow" fill="none" d="' + d + '"/>' +
+    '<path class="gm-thread" fill="none" d="' + d + '"/>';
+
+  PAGES.forEach(function(p, i){
+    var o = ORN[p.key]();
+    var k = (NODE / o.span).toFixed(4);
+    var pos = nodesXY[i];
+    svgStr +=
+      '<g class="gm-node' + (p.key === current ? ' current' : '') + '"' +
+      ' transform="translate(' + pos.x + ',' + pos.y + ')"' +
+      ' style="--dd:' + (900 + i*150) + 'ms;--ld:' + (1200 + i*100) + 'ms"' +
+      ' role="link" tabindex="0" aria-label="' + p.label + '"' +
+      ' data-url="' + p.url + '"' +
+      ' onclick="navigateTo(\'' + p.url + '\')">' +
+      /* burst layer sits outside the counter-rotating group so expanding
+         circles never disturb its bounding box */
+      '<g class="gm-burst"></g>' +
+      '<g class="gm-upright">' +
+      /* symmetric r=60 hit area keeps the fill-box center exactly on the
+         path point, so the counter-rotation pivot is exact */
+      '<circle r="60" fill="none" stroke="none" pointer-events="all"/>' +
+      '<g class="gm-ornwrap"><g fill="none" stroke="#C9A84C" stroke-width="1" transform="scale(' + k + ')">' + o.inner + '</g></g>' +
+      '<circle class="gm-base" r="4.5"/>' +
+      '<text class="gm-label" y="50">' + p.label + '</text>' +
+      '</g></g>';
+  });
+  map.innerHTML = svgStr;
+
+  var glow = map.querySelector('.gm-glow');
+  var coreglow = map.querySelector('.gm-coreglow');
+  var pathLen = 2000;
+  try { pathLen = glow.getTotalLength(); } catch(e){}
+
+  /* ---------- supernova bursts ---------- */
+  function burst(node, strong){
+    if (reduced) return;
+    var layer = node.querySelector('.gm-burst');
+    [60, 80, 100].forEach(function(r, i){
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('r', r);
+      c.setAttribute('fill', 'none');
+      c.setAttribute('stroke', '#C9A84C');
+      c.setAttribute('stroke-width', strong ? 2 : 1.25);
+      c.style.opacity = '0';
+      c.style.animation = 'gmNova 800ms ease-out ' + (i * 150) + 'ms forwards';
+      layer.appendChild(c);
+      setTimeout(function(){ if (c.parentNode) c.parentNode.removeChild(c); }, 1500 + i * 150);
+    });
+  }
+
+  /* ---------- deep space canvas: nebula, star field, shooting stars ---------- */
+  var overlay = document.getElementById('garden-overlay');
+  var canvas = document.getElementById('gm-canvas');
+  var ctx = canvas.getContext('2d');
+  var stars = [], shoots = [], rafId = null, openT = 0, nextShoot = 0;
+
+  function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
+  function clamp01(v){ return Math.min(1, Math.max(0, v)); }
+
+  function sizeCanvas(){
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var w = overlay.clientWidth, h = overlay.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    genStars(w, h);
+  }
+  function genStars(w, h){
+    stars = [];
+    var layers = [
+      { n:140, r:[0.5,0.5], a:[0.2,0.4], p:[3000,5000] }, /* far */
+      { n:100, r:[1,1],     a:[0.4,0.7], p:[1500,3000] }, /* mid */
+      { n:60,  r:[1.5,2],   a:[0.8,1.0], p:[800,1500]  }  /* near */
+    ];
+    var cx = w/2, cy = h/2, reach = Math.hypot(w, h) * 0.62;
+    layers.forEach(function(L){
+      for (var i = 0; i < L.n; i++){
+        var fx = Math.random() * w, fy = Math.random() * h;
+        var dx = fx - cx, dy = fy - cy, m = Math.hypot(dx, dy) || 1;
+        stars.push({
+          fx: fx, fy: fy,
+          ex: cx + dx/m * reach, ey: cy + dy/m * reach, /* warp-in start, beyond the edge */
+          r: L.r[0] + Math.random() * (L.r[1] - L.r[0]),
+          a: L.a[0] + Math.random() * (L.a[1] - L.a[0]),
+          p: L.p[0] + Math.random() * (L.p[1] - L.p[0]),
+          ph: Math.random() * Math.PI * 2,
+          wd: Math.random() * 300,
+          c: Math.random() < 0.5 ? '255,255,255' : '255,244,224' /* white / warm white */
+        });
+      }
+    });
+  }
+
+  function paintNebula(t, w, h){
+    var alpha = 0.4 * easeOut(clamp01((t - 100) / 600)); /* step 2: fade in */
+    if (alpha <= 0) return;
+    var dmax = Math.max(w, h);
+    ctx.save();
+    ctx.translate(w/2, h/2);
+    ctx.rotate((t / 40000) * Math.PI * 2); /* one revolution every 40s */
+    ctx.globalAlpha = alpha;
+    if (ctx.createConicGradient){
+      var g = ctx.createConicGradient(0, 0, 0);
+      g.addColorStop(0.00, '#0F0F0D');
+      g.addColorStop(0.10, '#1a0a2e');
+      g.addColorStop(0.24, '#0F0F0D');
+      g.addColorStop(0.38, '#0d1b2a');
+      g.addColorStop(0.54, '#0F0F0D');
+      g.addColorStop(0.70, '#2a1500');
+      g.addColorStop(0.86, '#0F0F0D');
+      g.addColorStop(1.00, '#0F0F0D');
+      ctx.fillStyle = g;
+      ctx.fillRect(-dmax, -dmax, dmax*2, dmax*2);
+    } else {
+      /* fallback: three slowly orbiting radial arms */
+      [['#1a0a2e',0],['#0d1b2a',2.1],['#2a1500',4.2]].forEach(function(arm){
+        var ax = Math.cos(arm[1]) * dmax * 0.3, ay = Math.sin(arm[1]) * dmax * 0.3;
+        var rg = ctx.createRadialGradient(ax, ay, 0, ax, ay, dmax * 0.55);
+        rg.addColorStop(0, arm[0]); rg.addColorStop(1, 'rgba(15,15,13,0)');
+        ctx.fillStyle = rg;
+        ctx.fillRect(-dmax, -dmax, dmax*2, dmax*2);
+      });
+    }
+    ctx.restore();
+    /* radial falloff so the galaxy darkens toward the edges */
+    var v = ctx.createRadialGradient(w/2, h/2, Math.min(w,h)*0.2, w/2, h/2, Math.max(w,h)*0.75);
+    v.addColorStop(0, 'rgba(15,15,13,0)');
+    v.addColorStop(1, 'rgba(15,15,13,' + (alpha * 0.9) + ')');
+    ctx.fillStyle = v;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function paintStars(t, now){
+    for (var i = 0; i < stars.length; i++){
+      var s = stars[i];
+      var wp = reduced ? 1 : easeOut(clamp01((t - 200 - s.wd) / 600)); /* step 3: warp in */
+      if (wp <= 0) continue;
+      var x = s.ex + (s.fx - s.ex) * wp;
+      var y = s.ey + (s.fy - s.ey) * wp;
+      var tw = reduced ? 1 : (0.7 + 0.3 * Math.sin((now / s.p) * Math.PI * 2 + s.ph));
+      ctx.globalAlpha = s.a * tw * wp;
+      ctx.fillStyle = 'rgb(' + s.c + ')';
+      ctx.beginPath();
+      ctx.arc(x, y, s.r * wp, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function paintShoots(now, t, w, h){
+    if (reduced) return;
+    if (t > 1500 && now >= nextShoot){
+      var dir = Math.random() < 0.5 ? 1 : -1;
+      var ang = (25 + Math.random() * 20) * Math.PI / 180;
+      shoots.push({
+        x: Math.random() * w, y: Math.random() * h * 0.5,
+        ca: Math.cos(ang) * dir, sa: Math.sin(ang),
+        len: 80 + Math.random() * 40,
+        travel: 240 + Math.random() * 120,
+        start: now
+      });
+      nextShoot = now + 4000 + Math.random() * 3000; /* every 4 to 7 seconds */
+    }
+    for (var i = shoots.length - 1; i >= 0; i--){
+      var s = shoots[i];
+      var p = (now - s.start) / 600;
+      if (p >= 1){ shoots.splice(i, 1); continue; }
+      var hx = s.x + s.ca * s.travel * p;
+      var hy = s.y + s.sa * s.travel * p;
+      var tx = hx - s.ca * s.len;
+      var ty = hy - s.sa * s.len;
+      var g = ctx.createLinearGradient(hx, hy, tx, ty);
+      g.addColorStop(0, 'rgba(255,255,255,' + (0.9 * (1 - p)) + ')');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(hx, hy);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+    }
+  }
+
+  function frame(now){
+    if (!openT) openT = now;
+    var t = now - openT;
+    var w = overlay.clientWidth, h = overlay.clientHeight;
+    ctx.fillStyle = '#0F0F0D';
+    ctx.fillRect(0, 0, w, h);
+    paintNebula(t, w, h);
+    paintStars(t, now);
+    paintShoots(now, t, w, h);
+    if (overlay.classList.contains('open') && !reduced){
+      rafId = requestAnimationFrame(frame);
+    }
+  }
+
+  /* ---------- open / close ---------- */
+  var closeBtn = document.getElementById('garden-close');
+
+  function openMap(){
+    overlay.classList.add('open');
+    overlay.removeAttribute('inert');
+    overlay.setAttribute('aria-hidden','false');
+    sizeCanvas();
+    openT = 0;
+    shoots = [];
+    nextShoot = performance.now() + 4000 + Math.random() * 3000;
+    if (reduced){
+      /* one static painting of the galaxy */
+      openT = performance.now() - 99999;
+      frame(performance.now());
+      glow.style.strokeDasharray = 'none';
+      coreglow.style.strokeDasharray = 'none';
+      glow.style.strokeDashoffset = '0';
+      coreglow.style.strokeDashoffset = '0';
+    } else {
+      /* step 4: spiral path draws itself in (800ms, from 500ms) */
+      [glow, coreglow].forEach(function(p){
+        p.style.transition = 'none';
+        p.style.strokeDasharray = pathLen;
+        p.style.strokeDashoffset = pathLen;
+      });
+      void map.getBoundingClientRect(); /* reflow */
+      [glow, coreglow].forEach(function(p){
+        p.style.transition = 'stroke-dashoffset .8s ease-out .5s';
+        p.style.strokeDashoffset = '0';
+      });
+      rafId = requestAnimationFrame(frame);
+    }
+    closeBtn.focus();
+  }
+  function closeMap(){
+    overlay.classList.remove('open');
+    overlay.setAttribute('inert','');
+    overlay.setAttribute('aria-hidden','true');
+    if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
+    if (!reduced){
+      [glow, coreglow].forEach(function(p){
+        p.style.transition = 'none';
+        p.style.strokeDashoffset = pathLen;
+      });
+    }
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', openMap);
+  closeBtn.addEventListener('click', closeMap);
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay || e.target === canvas || e.target === map) closeMap();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeMap();
+    if ((e.key === 'Enter' || e.key === ' ') &&
+        document.activeElement && document.activeElement.classList &&
+        document.activeElement.classList.contains('gm-node')){
+      e.preventDefault();
+      burst(document.activeElement, true);
+      navigateTo(document.activeElement.getAttribute('data-url'));
+    }
+  });
+
+  /* focus trap: Tab cycles within the open overlay */
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Tab' || !overlay.classList.contains('open')) return;
+    var f = overlay.querySelectorAll('#garden-close, .gm-node');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (!overlay.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
+
+  /* hover supernova + click supernova at maximum intensity */
+  Array.prototype.forEach.call(map.querySelectorAll('.gm-node'), function(node){
+    node.addEventListener('mouseenter', function(){ burst(node, false); });
+    node.addEventListener('click', function(){ burst(node, true); });
+  });
+
+  var grt = null;
+  window.addEventListener('resize', function(){
+    if (!overlay.classList.contains('open')) return;
+    clearTimeout(grt);
+    grt = setTimeout(function(){ sizeCanvas(); if (reduced) frame(performance.now()); }, 150);
+  });
+})();
